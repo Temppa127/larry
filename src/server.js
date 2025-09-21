@@ -111,9 +111,36 @@ async function verifyDiscordRequest(request, env) {
   return { interaction: JSON.parse(body), isValid: true };
 }
 
+
 const server = {
   verifyDiscordRequest,
   fetch: router.fetch,
 };
 
 export default server;
+
+
+
+async function sendPromptToDiscord(env) {
+  const webhookUrl = env.DISCORD_WEBHOOK_URL; // Store this in your environment variables!
+  const content = "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you";
+
+  await fetch(webhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content }),
+  });
+}
+
+
+
+export const scheduled = async (event, env, ctx) => {
+  // Here you can call the same logic as your "prompt" command
+  // For now, just log or send a message to Discord
+
+  // Example: Send a message to a Discord channel via webhook or bot API
+  // (You'll need to implement this part to actually send the message)
+  // await sendPromptToDiscord(env);
+
+  console.log("Weekly prompt triggered by Cloudflare Cron!");
+};
