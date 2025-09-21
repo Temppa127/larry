@@ -130,7 +130,7 @@ async function sendPromptToDiscord(env) {
     body: JSON.stringify({ content }),
   });
 }
-
+  
 
 export async function scheduled(event, env, ctx) {
 
