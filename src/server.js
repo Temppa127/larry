@@ -5,7 +5,7 @@ import {
   verifyKey,
   InteractionResponseFlags,
 } from 'discord-interactions';
-import { AWW_COMMAND, INVITE_COMMAND, PROMPT_COMMAND } from './commands.js';
+import { AWW_COMMAND, INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND } from './commands.js';
 import { getCuteUrl } from './reddit.js';
 
 // Helper for JSON responses
@@ -70,6 +70,18 @@ router.post('/', async (request, env) => {
           },
         });
       }
+      case CHANNEL_COMMAND.name.toLowerCase(): {
+       
+        const guildId = interaction.guild_id;
+        const channelId = interaction.channel_id;
+        await env.PROMPT_CHANNELS.put(guildId, channelId);
+
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: "This channel is now set for weekly prompts!" },
+        });
+
+      }
       default:
         return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
     }
@@ -95,24 +107,39 @@ async function verifyDiscordRequest(request, env) {
   return { interaction: JSON.parse(body), isValid: true };
 }
 
-// Function to send the prompt to Discord via webhook
-async function sendPromptToDiscord(env) {
-  const webhookUrl = env.DISCORD_WEBHOOK_URL;
-  const content =
-    "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you";
-  await fetch(webhookUrl, {
+
+async function sendPromptToAllChannels(env) {
+  const prompt = "You are stuck on the toilet, and there is no toilet paper...";
+
+  // List all guilds/channels
+  const list = await env.PROMPT_CHANNELS.list();
+  for (const entry of list.keys) {
+    const guildId = entry.name;
+    const channelId = await env.PROMPT_CHANNELS.get(guildId);
+    await sendPromptToDiscordChannel(env, channelId, prompt);
+  }
+}
+
+async function sendPromptToDiscordChannel(env, channelId, content) {
+  const botToken = env.DISCORD_TOKEN;
+  const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
+  await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Authorization": `Bot ${botToken}`,
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ content }),
   });
 }
 
 
 
+
 // Cloudflare Worker fetch handler
 export default {
   async scheduled(controller, env, ctx) {
-  await sendPromptToDiscord(env);
+  await sendPromptToAllChannels(env);
 },
   fetch: router.fetch,
 };

@@ -17,3 +17,8 @@ export const PROMPT_COMMAND = {
   name: 'prompt',
   description: 'Get a random writing prompt',
 };
+
+export const CHANNEL_COMMAND = {
+  name: 'setchannel',
+  description: 'Set weekly prompt channel',
+}
