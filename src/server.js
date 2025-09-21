@@ -8,7 +8,7 @@ import {
   InteractionType,
   verifyKey,
 } from 'discord-interactions';
-import { AWW_COMMAND, INVITE_COMMAND } from './commands.js';
+import { AWW_COMMAND, INVITE_COMMAND, PROMPT_COMMAND } from './commands.js';
 import { getCuteUrl } from './reddit.js';
 import { InteractionResponseFlags } from 'discord-interactions';
 
@@ -30,7 +30,7 @@ const router = AutoRouter();
  * A simple :wave: hello page to verify the worker is working.
  */
 router.get('/', (request, env) => {
-  return new Response(`👋 ${env.DISCORD_APPLICATION_ID}`);
+  return new Response(`🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭`);
 });
 
 /**
