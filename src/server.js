@@ -113,8 +113,12 @@ async function sendPromptToAllChannels(env) {
   
   let prompt = "WRITING PROMPT OF THE WEEK:\n";
   
-  
   prompt += "You are stuck on the toilet, and there is no toilet paper...";
+
+
+
+
+
 
   // List all guilds/channels
   const list = await env.PROMPT_CHANNELS.list();
