@@ -78,6 +78,14 @@ router.post('/', async (request, env) => {
           },
         });
       }
+      case PROMPT_COMMAND.name.toLowerCase(): {
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you"
+          },
+        });
+      }
       default:
         return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
     }

@@ -22,7 +22,7 @@ describe('Server', () => {
       const response = await server.fetch(request, env);
       const body = await response.text();
 
-      expect(body).to.equal('👋 123456789');
+      expect(body).to.equal('🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭');
     });
   });
 
