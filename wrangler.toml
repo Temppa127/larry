@@ -2,9 +2,13 @@ name = "larry"
 main = "./src/server.js"
 compatibility_date="2023-05-18"
 
-crons = ["* * * * *"] #["0 15 * * 1"] # Every Monday at 12:00 UTC (adjust as needed)
+
 
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1419400644888101118/da_ZpbxeDSmPTM8-N1Av62mClm6ZyelMTpLF1C-y0scqQFRWbc5NNq53NPq8PEeinOgD"
+
+[triggers]
+crons = ["* * * * *"] #["0 15 * * 1"] # Every Monday at 12:00 UTC (adjust as needed)
+
 
 # [secrets]
 # DISCORD_TOKEN
