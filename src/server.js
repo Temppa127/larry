@@ -107,12 +107,15 @@ async function sendPromptToDiscord(env) {
   });
 }
 
+// Cloudflare Cron Trigger handler (must be a named export!)
+export async function scheduled(event, env, ctx) {
+  await sendPromptToDiscord(env);
+}
+
+
 // Cloudflare Worker fetch handler
 export default {
   fetch: router.fetch,
 };
 
-// Cloudflare Cron Trigger handler (must be a named export!)
-export async function scheduled(event, env, ctx) {
-  await sendPromptToDiscord(env);
-}
+
