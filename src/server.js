@@ -132,8 +132,8 @@ async function sendPromptToDiscord(env) {
 }
 
 
-export const scheduled = async (event, env, ctx) => {
-  
+export async function scheduled(event, env, ctx) {
+
   await sendPromptToDiscord(env);
 
-};
+}
