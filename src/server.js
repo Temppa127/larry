@@ -111,7 +111,8 @@ async function verifyDiscordRequest(request, env) {
 async function sendPromptToAllChannels(env) {
   
   
-  const prompt = "WRITING PROMPT OF THE WEEK:\n";
+  let prompt = "WRITING PROMPT OF THE WEEK:\n";
+  
   
   prompt += "You are stuck on the toilet, and there is no toilet paper...";
 
