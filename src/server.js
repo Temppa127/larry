@@ -1,24 +1,21 @@
-/**
- * The core server that runs on a Cloudflare worker.
- */
-
 import { AutoRouter } from 'itty-router';
 import {
   InteractionResponseType,
   InteractionType,
   verifyKey,
+  InteractionResponseFlags,
 } from 'discord-interactions';
 import { AWW_COMMAND, INVITE_COMMAND, PROMPT_COMMAND } from './commands.js';
 import { getCuteUrl } from './reddit.js';
-import { InteractionResponseFlags } from 'discord-interactions';
 
+// Helper for JSON responses
 class JsonResponse extends Response {
   constructor(body, init) {
     const jsonBody = JSON.stringify(body);
-    init = init || {
-      headers: {
-        'content-type': 'application/json;charset=UTF-8',
-      },
+    init = init || {};
+    init.headers = {
+      'content-type': 'application/json;charset=UTF-8',
+      ...init.headers,
     };
     super(jsonBody, init);
   }
@@ -26,45 +23,31 @@ class JsonResponse extends Response {
 
 const router = AutoRouter();
 
-/**
- * A simple :wave: hello page to verify the worker is working.
- */
+// Hello route
 router.get('/', (request, env) => {
-  return new Response(`🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭`);
+  return new Response('🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭');
 });
 
-/**
- * Main route for all requests sent from Discord.  All incoming messages will
- * include a JSON payload described here:
- * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
- */
+// Main Discord interaction route
 router.post('/', async (request, env) => {
-  const { isValid, interaction } = await server.verifyDiscordRequest(
-    request,
-    env,
-  );
+  const { isValid, interaction } = await verifyDiscordRequest(request, env);
   if (!isValid || !interaction) {
     return new Response('Bad request signature.', { status: 401 });
   }
 
   if (interaction.type === InteractionType.PING) {
-    // The `PING` message is used during the initial webhook handshake, and is
-    // required to configure the webhook in the developer portal.
     return new JsonResponse({
       type: InteractionResponseType.PONG,
     });
   }
 
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
-    // Most user commands will come as `APPLICATION_COMMAND`.
     switch (interaction.data.name.toLowerCase()) {
       case AWW_COMMAND.name.toLowerCase(): {
         const cuteUrl = await getCuteUrl();
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: cuteUrl,
-          },
+          data: { content: cuteUrl },
         });
       }
       case INVITE_COMMAND.name.toLowerCase(): {
@@ -82,7 +65,8 @@ router.post('/', async (request, env) => {
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content: "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you"
+            content:
+              "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you",
           },
         });
       }
@@ -91,11 +75,12 @@ router.post('/', async (request, env) => {
     }
   }
 
-  console.error('Unknown Type');
   return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
 });
+
 router.all('*', () => new Response('Not Found.', { status: 404 }));
 
+// Discord signature verification
 async function verifyDiscordRequest(request, env) {
   const signature = request.headers.get('x-signature-ed25519');
   const timestamp = request.headers.get('x-signature-timestamp');
@@ -107,33 +92,27 @@ async function verifyDiscordRequest(request, env) {
   if (!isValidRequest) {
     return { isValid: false };
   }
-
   return { interaction: JSON.parse(body), isValid: true };
 }
 
-
-const server = {
-  verifyDiscordRequest,
-  fetch: router.fetch,
-};
-
-export default server;
-
-
+// Function to send the prompt to Discord via webhook
 async function sendPromptToDiscord(env) {
-  const webhookUrl = env.DISCORD_WEBHOOK_URL; // Store this in your environment variables!
-  const content = "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you";
-
+  const webhookUrl = env.DISCORD_WEBHOOK_URL;
+  const content =
+    "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you";
   await fetch(webhookUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content }),
   });
 }
-  
 
+// Cloudflare Worker fetch handler
+export default {
+  fetch: router.fetch,
+};
+
+// Cloudflare Cron Trigger handler (must be a named export!)
 export async function scheduled(event, env, ctx) {
-
   await sendPromptToDiscord(env);
-
 }
