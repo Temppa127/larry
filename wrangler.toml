@@ -9,6 +9,8 @@ DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1419400644888101118/da_Zpb
 [triggers]
 crons = ["* * * * *"] #["0 15 * * 1"] # Every Monday at 12:00 UTC (adjust as needed)
 
+[observability.logs]
+enabled = true
 
 # [secrets]
 # DISCORD_TOKEN
