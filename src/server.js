@@ -65,12 +65,14 @@ router.post('/', async (request, env) => {
 
         const {results} = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE numberID IN (SELECT numberID FROM generalPrompts ORDER BY RANDOM() LIMIT 1)").run();
         
+        const res = results.numberID
+
 
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content:
-              JSON.stringify({results})
+              res
           },
         });
       }
