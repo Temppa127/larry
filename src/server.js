@@ -161,11 +161,8 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
 async function getRandomPrompt(env) {
   const results = await env.PROMPTS
     .prepare("SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1")
-    .run();
-  if (results.results.length > 0) {
+    .run();    
     return results.results[0];
-  }
-  return null;
 }
 
 
