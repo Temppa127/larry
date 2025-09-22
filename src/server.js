@@ -115,10 +115,7 @@ async function sendPromptToAllChannels(env) {
   
   
 
-  const results = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE numberID IN (SELECT numberID FROM generalPrompts ORDER BY RANDOM() LIMIT 1)").run();
-  const row = results.results[0]
-  const prompt = row.mainText
-  const genres = row.genres
+  const row = getRandomPrompt(env)
 
 
 
@@ -128,21 +125,21 @@ async function sendPromptToAllChannels(env) {
   for (const entry of list.keys) {
     const guildId = entry.name;
     const channelId = await env.PROMPT_CHANNELS.get(guildId);
-    await sendPromptToDiscordChannel(env, channelId, prompt, genres);
+    await sendPromptToDiscordChannel(env, channelId, row);
   }
 }
 
-async function sendPromptToDiscordChannel(env, channelId, promptText, genres) {
+async function sendPromptToDiscordChannel(env, channelId, row) {
   const botToken = env.DISCORD_TOKEN;
   const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
   // Example embed structure
   const embed = {
     title: "WRITING PROMPT OF THE WEEK:",
-    description: promptText,
+    description: row.mainText,
     color: 0x5865F2, // Discord blurple
     footer: {
-      text: genres,
+      text: row.genres,
     },
     timestamp: new Date().toISOString(),
     // You can add more fields, images, author, etc. as needed
@@ -160,6 +157,16 @@ async function sendPromptToDiscordChannel(env, channelId, promptText, genres) {
   });
 }
 
+
+async function getRandomPrompt(env) {
+  const results = await env.PROMPTS
+    .prepare("SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1")
+    .run();
+  if (results.results.length > 0) {
+    return results.results[0];
+  }
+  return null;
+}
 
 
 
