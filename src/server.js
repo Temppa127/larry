@@ -63,7 +63,7 @@ router.post('/', async (request, env) => {
       }
       case PROMPT_COMMAND.name.toLowerCase(): {
 
-        const {results} = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE numberID IN (SELECT numberID FROM generalPrompts ORDER BY RANDOM() LIMIT 1)").run();
+        const results = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE numberID IN (SELECT numberID FROM generalPrompts ORDER BY RANDOM() LIMIT 1)").run();
         
         const res = results.numberID
 
