@@ -138,10 +138,10 @@ async function sendPromptToDiscordChannel(env, channelId, mainText, genres) {
   // Example embed structure
   const embed = {
     title: "WRITING PROMPT OF THE WEEK:",
-    description: mainText,
+    description: toString(mainText),
     color: 0x5865F2, // Discord blurple
     footer: {
-      text: genres,
+      text: toString(genres),
     },
     timestamp: new Date().toISOString(),
     // You can add more fields, images, author, etc. as needed
