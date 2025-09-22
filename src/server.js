@@ -63,15 +63,13 @@ router.post('/', async (request, env) => {
       }
       case PROMPT_COMMAND.name.toLowerCase(): {
 
-        const results = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE numberID IN (SELECT numberID FROM generalPrompts ORDER BY RANDOM() LIMIT 1)").run();
-        const row = results.results[0]
-        const res = row.mainText
+        const poo = "poo"
 
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content:
-              JSON.stringify(res)
+              JSON.stringify(poo)
           },
         });
       }
@@ -116,10 +114,11 @@ async function verifyDiscordRequest(request, env) {
 async function sendPromptToAllChannels(env) {
   
   
-  let prompt = "WRITING PROMPT OF THE WEEK:\n";
-  prompt += "poo"
 
-
+  const results = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE numberID IN (SELECT numberID FROM generalPrompts ORDER BY RANDOM() LIMIT 1)").run();
+  const row = results.results[0]
+  const prompt = row.mainText
+  const genres = row.genres
 
 
 
@@ -129,22 +128,38 @@ async function sendPromptToAllChannels(env) {
   for (const entry of list.keys) {
     const guildId = entry.name;
     const channelId = await env.PROMPT_CHANNELS.get(guildId);
-    await sendPromptToDiscordChannel(env, channelId, prompt);
+    await sendPromptToDiscordChannel(env, channelId, prompt, genres);
   }
 }
 
-async function sendPromptToDiscordChannel(env, channelId, content) {
+async function sendPromptToDiscordChannel(env, channelId, promptText, genres) {
   const botToken = env.DISCORD_TOKEN;
   const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
+
+  // Example embed structure
+  const embed = {
+    title: "WRITING PROMPT OF THE WEEK:",
+    description: promptText,
+    color: 0x5865F2, // Discord blurple
+    footer: {
+      text: genres,
+    },
+    timestamp: new Date().toISOString(),
+    // You can add more fields, images, author, etc. as needed
+  };
+
   await fetch(url, {
     method: "POST",
     headers: {
       "Authorization": `Bot ${botToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({
+      embeds: [embed],
+    }),
   });
 }
+
 
 
 
