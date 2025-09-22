@@ -128,7 +128,6 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
   const botToken = env.DISCORD_TOKEN;
   const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
-  // Example embed structure
   const embed = {
     title: "WRITING PROMPT OF THE WEEK:",
     description: row.mainText,
@@ -137,7 +136,6 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
       text: "Genres: " + row.genres,
     },
     //timestamp: new Date().toISOString(),
-    // You can add more fields, images, author, etc. as needed
   };
 
   await fetch(url, {
