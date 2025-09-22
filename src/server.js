@@ -112,36 +112,29 @@ async function verifyDiscordRequest(request, env) {
 
 
 async function sendPromptToAllChannels(env) {
-  
-  
 
-  const row = getRandomPrompt(env)
-  const mainText = row.mainText
-  const genres = row.genres
-
-
-
+  const row = await getRandomPrompt(env)
 
   // List all guilds/channels
   const list = await env.PROMPT_CHANNELS.list();
   for (const entry of list.keys) {
     const guildId = entry.name;
     const channelId = await env.PROMPT_CHANNELS.get(guildId);
-    await sendPromptToDiscordChannel(env, channelId, mainText, genres);
+    await sendPromptToDiscordChannel(env, channelId, row);
   }
 }
 
-async function sendPromptToDiscordChannel(env, channelId, mainText, genres) {
+async function sendPromptToDiscordChannel(env, channelId, row) {
   const botToken = env.DISCORD_TOKEN;
   const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
   // Example embed structure
   const embed = {
     title: "WRITING PROMPT OF THE WEEK:",
-    description: toString(mainText),
+    description: row.mainText,
     color: 0x5865F2, // Discord blurple
     footer: {
-      text: toString(genres),
+      text: row.genres,
     },
     timestamp: new Date().toISOString(),
     // You can add more fields, images, author, etc. as needed
