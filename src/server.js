@@ -72,7 +72,7 @@ router.post('/', async (request, env) => {
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content:
-              res
+              JSON.stringify(res)
           },
         });
       }
