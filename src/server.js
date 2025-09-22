@@ -113,7 +113,11 @@ async function sendPromptToAllChannels(env) {
   
   let prompt = "WRITING PROMPT OF THE WEEK:\n";
   
-  prompt += "You are stuck on the toilet, and there is no toilet paper...";
+  const {results} = await env.PROMPTS.prepare("SELECT * from generalPrompts").run();
+
+  console.log(results)
+
+  prompt += "poo"
 
 
 
