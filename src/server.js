@@ -116,6 +116,8 @@ async function sendPromptToAllChannels(env) {
   
 
   const row = getRandomPrompt(env)
+  const mainText = row.mainText
+  const genres = row.genres
 
 
 
@@ -129,17 +131,17 @@ async function sendPromptToAllChannels(env) {
   }
 }
 
-async function sendPromptToDiscordChannel(env, channelId, row) {
+async function sendPromptToDiscordChannel(env, channelId, mainText, genres) {
   const botToken = env.DISCORD_TOKEN;
   const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
   // Example embed structure
   const embed = {
     title: "WRITING PROMPT OF THE WEEK:",
-    description: row.mainText,
+    description: mainText,
     color: 0x5865F2, // Discord blurple
     footer: {
-      text: row.genres,
+      text: genres,
     },
     timestamp: new Date().toISOString(),
     // You can add more fields, images, author, etc. as needed
