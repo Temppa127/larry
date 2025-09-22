@@ -127,7 +127,7 @@ async function sendPromptToAllChannels(env) {
   for (const entry of list.keys) {
     const guildId = entry.name;
     const channelId = await env.PROMPT_CHANNELS.get(guildId);
-    await sendPromptToDiscordChannel(env, channelId, row);
+    await sendPromptToDiscordChannel(env, channelId, mainText, genres);
   }
 }
 
