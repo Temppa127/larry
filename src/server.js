@@ -62,11 +62,15 @@ router.post('/', async (request, env) => {
         });
       }
       case PROMPT_COMMAND.name.toLowerCase(): {
+
+        const {results} = await env.PROMPTS.prepare("SELECT * FROM generalPrompts WHERE id IN (SELECT id FROM table ORDER BY RANDOM() LIMIT 1)").run();
+        
+
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content:
-              "You are stuck on the toilet, and there is no toilet paper... Even if you scream, the nearest human being is too far away to hear you",
+              JSON.stringify({results})
           },
         });
       }
@@ -112,11 +116,6 @@ async function sendPromptToAllChannels(env) {
   
   
   let prompt = "WRITING PROMPT OF THE WEEK:\n";
-  
-  const {results} = await env.PROMPTS.prepare("SELECT * from generalPrompts").run();
-
-  console.log(results)
-
   prompt += "poo"
 
 
