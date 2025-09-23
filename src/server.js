@@ -72,8 +72,8 @@ router.post('/', async (request, env) => {
           //timestamp: new Date().toISOString(),
         };
 
-        await fetch(url, {
-          method: "POST",
+        return await fetch(url, {
+          method: "POST", 
           headers: {
             "Authorization": `Bot ${botToken}`,
             "Content-Type": "application/json",
@@ -84,7 +84,7 @@ router.post('/', async (request, env) => {
         });
       }
       case CHANNEL_COMMAND.name.toLowerCase(): {
-       
+      
         const guildId = interaction.guild_id;
         const channelId = interaction.channel_id;
         await env.PROMPT_CHANNELS.put(guildId, channelId);
