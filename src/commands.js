@@ -15,13 +15,15 @@ export const PROMPT_COMMAND = {
       {
             "name": "genre",
             "description": "Which genre tag should the writing prompt contain?",
-            "type": 2, // 2 is type SUB_COMMAND_GROUP
-            "options":[
+            "type": 3,
+            "choices":[
               {
-                "name": "option 1"
+                "name": "option 1",
+                "value": "animal_dog"
               },
               {
-                "name": "option 2"
+                "name": "option 2",
+                "value": "animal_cat"
               }
             ],
             "required": False
@@ -29,7 +31,8 @@ export const PROMPT_COMMAND = {
         {
             "name": "role",
             "description": "Get or edit permissions for a role",
-            "type": 2
+            "type": 2,
+            "options":[]
         }
     ]
 };
