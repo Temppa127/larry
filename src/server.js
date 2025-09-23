@@ -5,7 +5,7 @@ import {
   verifyKey,
   InteractionResponseFlags,
 } from 'discord-interactions';
-import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND } from './commands.js';
+import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND} from './commands.js';
 
 
 // Helper for JSON responses
@@ -64,6 +64,17 @@ router.post('/', async (request, env) => {
           },
         });
       }
+      
+      case TEST_COMMAND.name.toLowerCase(): {
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "test"
+          }
+        })
+      }
+
+
 
       case PROMPT_COMMAND.name.toLowerCase(): {
 

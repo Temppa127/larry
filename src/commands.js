@@ -17,3 +17,9 @@ export const CHANNEL_COMMAND = {
   name: 'setchannel',
   description: 'Set weekly prompt channel',
 };
+
+export const TEST_COMMAND = {
+    "name": "permissions",
+    "description": "Get or edit permissions for a user or a role",
+    "options": []
+}

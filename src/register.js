@@ -1,4 +1,4 @@
-import { AWW_COMMAND, CHANNEL_COMMAND, INVITE_COMMAND, PROMPT_COMMAND } from './commands.js';
+import {CHANNEL_COMMAND, INVITE_COMMAND, PROMPT_COMMAND, TEST_COMMAND } from './commands.js';
 import dotenv from 'dotenv';
 import process from 'node:process';
 
@@ -34,7 +34,7 @@ const response = await fetch(url, {
     Authorization: `Bot ${token}`,
   },
   method: 'PUT',
-  body: JSON.stringify([INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND]),
+  body: JSON.stringify([INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND]),
 });
 
 if (response.ok) {
