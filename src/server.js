@@ -7,7 +7,6 @@ import {
 } from 'discord-interactions';
 import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND } from './commands.js';
 
-const { EmbedBuilder } = require('discord.js');
 
 // Helper for JSON responses
 class JsonResponse extends Response {
