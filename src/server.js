@@ -35,9 +35,15 @@ router.post('/', async (request, env) => {
     return new Response('Bad request signature.', { status: 401 });
   }
 
+  if (interaction.type === InteractionType.PING) {
+    return new JsonResponse({
+      type: InteractionResponseType.PONG,
+    });
+  }
+
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
     return new JsonResponse({
-      //type: InteractionResponseType.PONG,
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
         content: request.text
       }
