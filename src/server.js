@@ -35,9 +35,12 @@ router.post('/', async (request, env) => {
     return new Response('Bad request signature.', { status: 401 });
   }
 
-  if (interaction.type === InteractionType.PING) {
+  if (interaction.type === InteractionType.APPLICATION_COMMAND) {
     return new JsonResponse({
-      type: InteractionResponseType.PONG,
+      //type: InteractionResponseType.PONG,
+      data: {
+        content: request.text
+      }
     });
   }
 
@@ -57,11 +60,9 @@ router.post('/', async (request, env) => {
       }
 
       case PROMPT_COMMAND.name.toLowerCase(): {
-        const channelId = interaction.channel_id;
-        const botToken = env.DISCORD_TOKEN;
-        const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
         const row = await getRandomPrompt(env)
+        if(!row) return
 
         const embed = {
           title: "Your prompt:",
@@ -163,8 +164,25 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
 async function getRandomPrompt(env) {
   const results = await env.PROMPTS
     .prepare("SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1")
-    .run();    
-    return results.results[0];
+    .run();
+    
+    if (results.results.length > 0) {
+      return results.results[0];
+    }
+    return null;
+
+}
+
+async function getRandomPromptByGenre(genre, env) {
+  const results = await env.PROMPTS
+    .prepare("SELECT * FROM generalPrompts where genres is like %" + genre + "% ORDER BY RANDOM() LIMIT 1")
+    .run();
+    
+    if (results.results.length > 0) {
+      return results.results[0];
+    }
+    return null;
+
 }
 
 
