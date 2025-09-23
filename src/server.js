@@ -7,6 +7,8 @@ import {
 } from 'discord-interactions';
 import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND } from './commands.js';
 
+const { EmbedBuilder } = require('discord.js');
+
 // Helper for JSON responses
 class JsonResponse extends Response {
   constructor(body, init) {
@@ -73,14 +75,12 @@ router.post('/', async (request, env) => {
         };
 
         return new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {content: JSON.stringify({
-            embeds: [embed],
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data:{
+              embeds: [embed],
+            }
           })
         }
-          }
-        )
-      }
       case CHANNEL_COMMAND.name.toLowerCase(): {
       
         const guildId = interaction.guild_id;
