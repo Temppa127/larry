@@ -3,11 +3,6 @@
  * and registration.
  */
 
-export const AWW_COMMAND = {
-  name: 'awwww',
-  description: 'Drop some cuteness on this channel.',
-};
-
 export const INVITE_COMMAND = {
   name: 'invite',
   description: 'Get an invite link to add the bot to your server',
@@ -21,4 +16,4 @@ export const PROMPT_COMMAND = {
 export const CHANNEL_COMMAND = {
   name: 'setchannel',
   description: 'Set weekly prompt channel',
-}
+};

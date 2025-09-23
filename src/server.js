@@ -5,8 +5,7 @@ import {
   verifyKey,
   InteractionResponseFlags,
 } from 'discord-interactions';
-import { AWW_COMMAND, INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND } from './commands.js';
-import { getCuteUrl } from './reddit.js';
+import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND } from './commands.js';
 
 // Helper for JSON responses
 class JsonResponse extends Response {
@@ -43,13 +42,7 @@ router.post('/', async (request, env) => {
 
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
     switch (interaction.data.name.toLowerCase()) {
-      case AWW_COMMAND.name.toLowerCase(): {
-        const cuteUrl = await getCuteUrl();
-        return new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { content: cuteUrl },
-        });
-      }
+      
       case INVITE_COMMAND.name.toLowerCase(): {
         const applicationId = env.DISCORD_APPLICATION_ID;
         const INVITE_URL = `https://discord.com/oauth2/authorize?client_id=${applicationId}&scope=applications.commands`;
@@ -61,6 +54,7 @@ router.post('/', async (request, env) => {
           },
         });
       }
+
       case PROMPT_COMMAND.name.toLowerCase(): {
         const channelId = interaction.channel_id;
         const botToken = env.DISCORD_TOKEN;
@@ -101,6 +95,7 @@ router.post('/', async (request, env) => {
         });
 
       }
+
       default:
         return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
     }
