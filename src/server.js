@@ -72,16 +72,14 @@ router.post('/', async (request, env) => {
           //timestamp: new Date().toISOString(),
         };
 
-        return await fetch(url, {
-          method: "POST", 
-          headers: {
-            "Authorization": `Bot ${botToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {content: JSON.stringify({
             embeds: [embed],
-          }),
-        });
+          })
+        }
+          }
+        )
       }
       case CHANNEL_COMMAND.name.toLowerCase(): {
       
