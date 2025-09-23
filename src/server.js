@@ -80,6 +80,7 @@ router.post('/', async (request, env) => {
             }
           })
         }
+        
       case CHANNEL_COMMAND.name.toLowerCase(): {
       
         const guildId = interaction.guild_id;
