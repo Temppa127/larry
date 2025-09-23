@@ -62,15 +62,31 @@ router.post('/', async (request, env) => {
         });
       }
       case PROMPT_COMMAND.name.toLowerCase(): {
+        const channelId = interaction.channel_id;
+        const botToken = env.DISCORD_TOKEN;
+        const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
-        const poo = "poo"
+        const row = await getRandomPrompt(env)
 
-        return new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content:
-              JSON.stringify(poo)
+        const embed = {
+          title: "Your prompt:",
+          description: row.mainText,
+          color: 0x5865F2, // Discord blurple
+          footer: {
+            text: "Genres: " + row.genres,
           },
+          //timestamp: new Date().toISOString(),
+        };
+
+        await fetch(url, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bot ${botToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            embeds: [embed],
+          }),
         });
       }
       case CHANNEL_COMMAND.name.toLowerCase(): {
