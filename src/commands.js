@@ -11,29 +11,24 @@ export const INVITE_COMMAND = {
 export const PROMPT_COMMAND = {
   name: 'prompt',
   description: 'Get a random writing prompt',
+  type: 1,
   "options": [
       {
-            "name": "genre",
-            "description": "Which genre tag should the writing prompt contain?",
-            "type": 3,
-            "choices":[
-              {
-                "name": "option 1",
-                "value": "animal_dog"
-              },
-              {
-                "name": "option 2",
-                "value": "animal_cat"
-              }
-            ],
-            "required": False
-        },
-        {
-            "name": "role",
-            "description": "Get or edit permissions for a role",
-            "type": 2,
-            "options":[]
-        }
+          "name": "genre",
+          "description": "Which genre tag should the writing prompt contain?",
+          "type": 3,
+          "required": False,
+          "choices":[
+            {
+              "name": "option 1",
+              "value": "animal_dog"
+            },
+            {
+            "name": "option 2",
+            "value": "animal_cat"
+            }
+          ]
+      }
     ]
 };
 
