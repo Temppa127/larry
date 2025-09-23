@@ -17,7 +17,7 @@ export const PROMPT_COMMAND = {
           "name": "genre",
           "description": "Which genre tag should the writing prompt contain?",
           "type": 3,
-          "required": False,
+          "required": false,
           "choices":[
             {
               "name": "option 1",
