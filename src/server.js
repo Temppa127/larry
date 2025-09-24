@@ -189,28 +189,16 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
 
 async function getRandomPrompt(env, genre) {
 
-  let str = ""
+  let str
   if(genre)
     {
       str = "SELECT * FROM generalPrompts where genres is like %" + genre + "% ORDER BY RANDOM() LIMIT 1"
   } else {
-    "SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1"
+    str = "SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1"
   }
 
   const results = await env.PROMPTS
     .prepare(str)
-    .run();
-    
-    if (results.results.length > 0) {
-      return results.results[0];
-    }
-    return null;
-
-}
-
-async function getRandomPromptByGenre(genre, env) {
-  const results = await env.PROMPTS
-    .prepare("SELECT * FROM generalPrompts where genres is like %" + genre + "% ORDER BY RANDOM() LIMIT 1")
     .run();
     
     if (results.results.length > 0) {
