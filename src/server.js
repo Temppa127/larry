@@ -78,8 +78,16 @@ router.post('/', async (request, env) => {
 
       case PROMPT_COMMAND.name.toLowerCase(): {
 
-        const row = await getRandomPrompt(env)
-        if(!row) return
+        
+        const genreOption = interaction.data.options?.find(opt => opt.name === "genre");
+        const selectedGenre = genreOption?.value;
+
+
+        const row = await getRandomPrompt(env, selectedGenre)
+        if(!row) {return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: "Unable to return a prompt. Please try again in a moment and contact the dev if issues persist!" },
+        });}
 
         const embed = {
           title: "Your prompt:",
@@ -178,7 +186,16 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
 }
 
 
-async function getRandomPrompt(env) {
+async function getRandomPrompt(env, genre) {
+
+  let str = ""
+  if(genre)
+    {
+      str = "SELECT * FROM generalPrompts where genres is like %" + genre + "% ORDER BY RANDOM() LIMIT 1"
+  } else {
+    "SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1"
+  }
+
   const results = await env.PROMPTS
     .prepare("SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1")
     .run();
