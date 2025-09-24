@@ -84,6 +84,7 @@ router.post('/', async (request, env) => {
 
 
         const row = await getRandomPrompt(env, selectedGenre)
+
         if(!row) {return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: { content: "Unable to return a prompt. Please try again in a moment and contact the dev if issues persist!" },
@@ -197,7 +198,7 @@ async function getRandomPrompt(env, genre) {
   }
 
   const results = await env.PROMPTS
-    .prepare("SELECT * FROM generalPrompts ORDER BY RANDOM() LIMIT 1")
+    .prepare(str)
     .run();
     
     if (results.results.length > 0) {
