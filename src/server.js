@@ -41,14 +41,14 @@ router.post('/', async (request, env) => {
     });
   }
 
-  if (interaction.type === InteractionType.APPLICATION_COMMAND) {
-    return new JsonResponse({
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        content: JSON.stringify(request.data.options)
-      }
-    });
-  }
+  // if (interaction.type === InteractionType.APPLICATION_COMMAND) {
+  //   return new JsonResponse({
+  //     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+  //     data: {
+  //       content: JSON.stringify(request.data.options)
+  //     }
+  //   });
+  // }
 
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
     switch (interaction.data.name.toLowerCase()) {
