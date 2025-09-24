@@ -20,12 +20,12 @@ export const PROMPT_COMMAND = {
           "required": false,
           "choices":[
             {
-              "name": "option 1",
-              "value": "animal_dog"
+              "name": "horror",
+              "value": "horror"
             },
             {
-            "name": "option 2",
-            "value": "animal_cat"
+            "name": "conflict",
+            "value": "conflict"
             }
           ]
       }
