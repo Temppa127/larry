@@ -115,7 +115,7 @@ router.post('/', async (request, env) => {
 
         if(!row) {return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { content: "Unable to return a prompt. Please try again in a moment and contact the dev if issues persist!" },
+          data: { content: "Could not return a prompt! If choosing a genre, make sure you've typed it correctly. If issues persist, contact devs." },
         });}
 
         const embed = {
