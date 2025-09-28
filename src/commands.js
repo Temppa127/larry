@@ -15,19 +15,10 @@ export const PROMPT_COMMAND = {
   "options": [
       {
         "name": "genre",
-        "description": "Which genre tag should the writing prompt contain?",
+        "description": "Which genre tag should the writing prompt have?",
         "type": 3,
         "required": false,
-        "choices":[
-          {
-            "name": "horror",
-            "value": "horror"
-          },
-          {
-          "name": "conflict",
-          "value": "conflict"
-          }
-        ]
+        "autocomplete": true
       }
     ]
 };

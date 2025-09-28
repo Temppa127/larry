@@ -50,6 +50,34 @@ router.post('/', async (request, env) => {
   //   });
   // }
 
+  if (interaction.type === InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE) {
+    const focusedOption = interaction.data.options.find(opt => opt.focused);
+    if (focusedOption?.name === "genre") {
+      const userInput = focusedOption.value.toLowerCase();
+
+      
+      const genreResults = await env.PROMPTS
+        .prepare("SELECT DISTINCT genre FROM genresTable WHERE genre LIKE ? LIMIT 25")
+        .bind(`%${userInput}%`)
+        .all();
+
+      const choices = genreResults.results.map(row => ({
+        name: row.genre,
+        value: row.genre
+      }));
+
+
+      return new JsonResponse({
+        type: InteractionResponseType.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT,
+        data: {
+          choices
+        }
+      });
+    }
+}
+
+
+
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
     switch (interaction.data.name.toLowerCase()) {
       
