@@ -156,10 +156,10 @@ router.post('/', async (request, env) => {
       
       case PROMPT_DELETE_COMMAND.name.toLowerCase(): {
 
-        const userId = interaction.member?.user?.id;
+        const userId = interaction.member.user.id;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
-        let notEnoughPerms = checkPermissions(userId, "MAKEPROMPT");
+        let notEnoughPerms = await checkPermissions(userId, "MAKEPROMPT");
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
@@ -212,9 +212,9 @@ async function verifyDiscordRequest(request, env) {
   return { interaction: JSON.parse(body), isValid: true };
 }
 
-function checkPermissions(userID, checkAgainst) {
+async function checkPermissions(userID, checkAgainst) {
 
-  let lvl = env.PERMISSION_LEVELS.get(userID)
+  let lvl = await env.PERMISSION_LEVELS.get(userID)
   if (!lvl) {
     lvl = "DEFAULT"
     }
