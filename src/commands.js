@@ -33,6 +33,14 @@ export const PROMPT_DELETE_COMMAND = {
   name: 'delete',
   description: 'Delete a prompt',
   type: 1,
+  "options": [
+      {
+        "name": "id",
+        "description": "ID of the writing prompt you wish to delete",
+        "type": 4,
+        "required": false
+      }
+    ]
 };
 
 export const PROMPT_ADD_COMMAND = {

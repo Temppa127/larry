@@ -7,6 +7,14 @@ import {
 } from 'discord-interactions';
 import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND} from './commands.js';
 
+const PERM_LEVELS = {
+  "ADMIN": 1000,
+  "MAKEPROMPT": 10,
+  "DEFAULT": 0
+
+}
+
+
 
 // Helper for JSON responses
 class JsonResponse extends Response {
@@ -148,6 +156,18 @@ router.post('/', async (request, env) => {
       
       case PROMPT_DELETE_COMMAND.name.toLowerCase(): {
 
+        const userId = interaction.member?.user?.id;
+        if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
+
+        let notEnoughPerms = checkPermissions(userId, "MAKEPROMPT");
+
+        if(notEnoughPerms) {return notEnoughPerms;}
+
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: "Success" },
+        });
+
       }
 
       case PROMPT_ADD_COMMAND.name.toLowerCase(): {
@@ -192,6 +212,21 @@ async function verifyDiscordRequest(request, env) {
   return { interaction: JSON.parse(body), isValid: true };
 }
 
+function checkPermissions(userID, checkAgainst) {
+
+  let lvl = env.PERMISSION_LEVELS.get(userID)
+  if (!lvl) {
+    lvl = "DEFAULT"
+    }
+
+  if (PERM_LEVELS[lvl] < PERM_LEVELS[checkAgainst]) {
+      return new JsonResponse({
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: { content: "Error: Permission level not high enough to execute this command" },
+  });
+  }
+  return null;
+}
 
 async function sendPromptToAllChannels(env) {
 
