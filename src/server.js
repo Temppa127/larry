@@ -159,13 +159,13 @@ router.post('/', async (request, env) => {
         const userId = interaction.member.user.id;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
-        let notEnoughPerms = await checkPermissions(userId, "MAKEPROMPT");
+        let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { content: "Success" },
+          data: { content: "test success" },
         });
 
       }
@@ -212,12 +212,12 @@ async function verifyDiscordRequest(request, env) {
   return { interaction: JSON.parse(body), isValid: true };
 }
 
-async function checkPermissions(userID, checkAgainst) {
+async function checkPermissions(env, userID, checkAgainst) {
 
   let lvl = await env.PERMISSION_LEVELS.get(userID)
   if (!lvl) {
     lvl = "DEFAULT"
-    }
+  }
 
   if (PERM_LEVELS[lvl] < PERM_LEVELS[checkAgainst]) {
       return new JsonResponse({
