@@ -23,7 +23,7 @@ export const PROMPT_COMMAND = {
       {
         "name": "id",
         "description": "Which ID should the writing prompt have?",
-        "type": 3,
+        "type": 4,
         "required": false
       }
     ]
