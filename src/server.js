@@ -110,7 +110,7 @@ router.post('/', async (request, env) => {
         const genreOption = interaction.data.options?.find(opt => opt.name === "genre");
         const selectedGenre = genreOption?.value;
 
-        const idOption = interaction.data.options?.find(opt => opt.name === "ID");
+        const idOption = interaction.data.options?.find(opt => opt.name === "id");
         const selectedID = idOption?.value;
 
         let row
