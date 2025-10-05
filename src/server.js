@@ -172,7 +172,17 @@ router.post('/', async (request, env) => {
       }
 
       case PROMPT_ADD_COMMAND.name.toLowerCase(): {
-        
+        const userId = interaction.member.user.id;
+        if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
+
+        let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
+
+        if(notEnoughPerms) {return notEnoughPerms;}
+
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: "test success" },
+        });
       }
 
       case CHANNEL_COMMAND.name.toLowerCase(): {

@@ -38,15 +38,35 @@ export const PROMPT_DELETE_COMMAND = {
         "name": "id",
         "description": "ID of the writing prompt you wish to delete",
         "type": 4,
-        "required": false
+        "required": true
       }
     ]
 };
 
 export const PROMPT_ADD_COMMAND = {
   name: 'add',
-  description: 'Add a writing prompt',
+  description: 'Add a prompt',
   type: 1,
+  "options": [
+      {
+        "name": "content",
+        "description": "Main text of the prompt",
+        "type": 3,
+        "required": true
+      },
+      {
+        "name": "genres",
+        "description": "List of genres, separated by commas",
+        "type": 3,
+        "required": true
+      },
+      {
+        "name": "id",
+        "description": "ID of the writing prompt (automatically assigned if left blank!)",
+        "type": 4,
+        "required": false
+      },
+    ]
 };
 
 
