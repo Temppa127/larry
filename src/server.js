@@ -123,7 +123,7 @@ router.post('/', async (request, env) => {
           description: row.mainText,
           color: 0x5865F2, // Discord blurple
           footer: {
-            text: "Genres: " + row.genres,
+            text: "Genres: " + row.genres + "\n" + "ID: " + row.numberID,
           },
           //timestamp: new Date().toISOString(),
         };
@@ -197,7 +197,7 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
     description: row.mainText,
     color: 0x5865F2, // Discord blurple
     footer: {
-      text: "Genres: " + row.genres,
+      text: "Genres: " + row.genres + "\n" + "ID: " + row.numberID,
     },
     //timestamp: new Date().toISOString(),
   };
