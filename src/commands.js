@@ -19,6 +19,12 @@ export const PROMPT_COMMAND = {
         "type": 3,
         "required": false,
         "autocomplete": true
+      },
+      {
+        "name": "id",
+        "description": "Which ID should the writing prompt have?",
+        "type": 3,
+        "required": false
       }
     ]
 };

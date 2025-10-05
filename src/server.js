@@ -110,8 +110,18 @@ router.post('/', async (request, env) => {
         const genreOption = interaction.data.options?.find(opt => opt.name === "genre");
         const selectedGenre = genreOption?.value;
 
+        const idOption = interaction.data.options?.find(opt => opt.name === "ID");
+        const selectedID = idOption?.value;
 
-        const row = await getRandomPrompt(env, selectedGenre)
+        let row
+
+        if(selectedID) {
+          row = await getPromptByID(env, selectedID)
+        } else {
+          row = await getRandomPrompt(env, selectedGenre)
+        }
+
+        
 
         if(!row) {return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -213,6 +223,23 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
     }),
   });
 }
+
+async function getPromptByID(env, ID) {
+  let query;
+  let stmt;
+
+  query = "SELECT * FROM generalPrompts WHERE numberID = ? ORDER BY RANDOM() LIMIT 1";
+  stmt = env.PROMPTS.prepare(query).bind(`${ID}`);
+
+  const results = await stmt.run();
+
+  if (results.results.length > 0) {
+    return results.results[0];
+  }
+  return null;
+
+}
+
 
 
 async function getRandomPrompt(env, genre) {
