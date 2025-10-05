@@ -29,6 +29,19 @@ export const PROMPT_COMMAND = {
     ]
 };
 
+export const PROMPT_DELETE_COMMAND = {
+  name: 'delete',
+  description: 'Delete a prompt',
+  type: 1,
+};
+
+export const PROMPT_ADD_COMMAND = {
+  name: 'add',
+  description: 'Add a writing prompt',
+  type: 1,
+};
+
+
 export const CHANNEL_COMMAND = {
   name: 'setchannel',
   description: 'Set weekly prompt channel',

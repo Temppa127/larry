@@ -5,7 +5,7 @@ import {
   verifyKey,
   InteractionResponseFlags,
 } from 'discord-interactions';
-import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND} from './commands.js';
+import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND} from './commands.js';
 
 
 // Helper for JSON responses
@@ -145,7 +145,15 @@ router.post('/', async (request, env) => {
             }
           })
         }
+      
+      case PROMPT_DELETE_COMMAND.name.toLowerCase(): {
+
+      }
+
+      case PROMPT_ADD_COMMAND.name.toLowerCase(): {
         
+      }
+
       case CHANNEL_COMMAND.name.toLowerCase(): {
       
         const guildId = interaction.guild_id;
@@ -229,7 +237,7 @@ async function getPromptByID(env, ID) {
   let stmt;
 
   ID = ID.match(/\d+/);
-  if(ID){ ID = ID.shift(); }
+  if(ID) { ID = ID.shift(); }
   else { return null; }
 
 
