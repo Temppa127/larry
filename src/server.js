@@ -228,7 +228,7 @@ async function getPromptByID(env, ID) {
   let query;
   let stmt;
 
-  query = "SELECT * FROM generalPrompts WHERE numberID = ? ORDER BY RANDOM() LIMIT 1";
+  query = "SELECT * FROM generalPrompts WHERE numberID = ? LIMIT 1";
   stmt = env.PROMPTS.prepare(query).bind(`${ID}`);
 
   const results = await stmt.run();
