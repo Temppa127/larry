@@ -17,6 +17,9 @@ enabled = true
 binding = "PROMPT_CHANNELS"
 id = "acb8e6a7e3f64fd4906301109695609b"
 
+binding = "PERMISSION_LEVELS"
+id = "61764b40fc854a74b8e9f8fbeab99101"
+
 [[d1_databases]]
 binding = "PROMPTS"
 database_name = "prompts"
