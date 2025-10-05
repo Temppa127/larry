@@ -134,6 +134,7 @@ router.post('/', async (request, env) => {
         if(!row) {return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: { content: "Could not return a prompt! If choosing a genre or id, make sure you've typed it correctly. If issues persist, contact devs." },
+          flags: InteractionResponseFlags.EPHEMERAL,
         });}
 
         const embed = {
@@ -223,6 +224,7 @@ async function checkPermissions(env, userID, checkAgainst) {
       return new JsonResponse({
       type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
       data: { content: "Error: Permission level not high enough to execute this command" },
+      flags: InteractionResponseFlags.EPHEMERAL,
   });
   }
   return null;
