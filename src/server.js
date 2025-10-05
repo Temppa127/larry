@@ -230,7 +230,7 @@ async function getPromptByID(env, ID) {
 
   ID = ID.match(/\d+/);
   if(ID){ ID = ID.shift(); }
-  else { ID = ""; }
+  else { return null; }
 
 
   query = "SELECT * FROM generalPrompts WHERE numberID LIKE ? LIMIT 1";
