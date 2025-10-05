@@ -287,12 +287,6 @@ async function getPromptByID(env, ID) {
   let query;
   let stmt;
 
-  ID = ID.match(/\d+/);
-  if(ID) { ID = ID.shift(); }
-  else { return null; }
-
-  console.log(ID)
-
 
   query = "SELECT * FROM generalPrompts WHERE numberID LIKE ? LIMIT 1";
   stmt = env.PROMPTS.prepare(query).bind(`${ID}`);
