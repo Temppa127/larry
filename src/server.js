@@ -11,8 +11,10 @@ const PERM_LEVELS = {
   "ADMIN": 1000,
   "MAKEPROMPT": 10,
   "DEFAULT": 0
-
 }
+
+let DEL_BUFFER = {}
+
 
 
 
@@ -168,7 +170,7 @@ router.post('/', async (request, env) => {
 
         const idOption = interaction.data.options?.find(opt => opt.name === "id");
 
-
+        DEL_BUFFER[userId] = idOption
 
         
         return new JsonResponse({
@@ -230,6 +232,60 @@ router.post('/', async (request, env) => {
         return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
     }
   }
+
+  
+if (interaction.type === InteractionType.MESSAGE_COMPONENT) {
+  const userId = interaction.member.user.id;
+  const customId = interaction.data.custom_id;
+
+  switch (customId) {
+    case "confirm_delete": {
+      // Perform deletion logic here
+
+      
+      
+      const promptID = DEL_BUFFER[userId]
+      if(!promptID) {return new JsonResponse({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Unknown error",
+          flags: InteractionResponseFlags.EPHEMERAL
+        }
+      });}
+
+      return new JsonResponse({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Prompt deleted.",
+          flags: InteractionResponseFlags.EPHEMERAL
+        }
+      });
+    }
+
+    case "cancel_delete": {
+      return new JsonResponse({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Deletion cancelled.",
+          flags: InteractionResponseFlags.EPHEMERAL
+        }
+      });
+    }
+
+    default:
+      return new JsonResponse({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Unknown action.",
+          flags: InteractionResponseFlags.EPHEMERAL
+        }
+      });
+  }
+}
+
+
+
+
 
   return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
 });
