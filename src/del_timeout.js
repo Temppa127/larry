@@ -1,5 +1,5 @@
 
-export class DeletePromptTimeout {
+export class DEL_TIMEOUT {
   constructor(state, env) {
     this.state = state;
     this.env = env;

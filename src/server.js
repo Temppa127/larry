@@ -6,6 +6,7 @@ import {
   InteractionResponseFlags,
 } from 'discord-interactions';
 import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND} from './commands.js';
+import { DEL_TIMEOUT } from './del_timeout.js';
 
 const PERM_LEVELS = {
   "ADMIN": 1000,
@@ -173,8 +174,8 @@ router.post('/', async (request, env) => {
         DEL_BUFFER[userId] = idOption
 
         
-        const id = DELETE_PROMPT_TIMEOUT.idFromName(interaction.id);
-        const obj = DELETE_PROMPT_TIMEOUT.get(id);
+        const id = DEL_TIMEOUT.idFromName(interaction.id);
+        const obj = DEL_TIMEOUT.get(id);
 
         await obj.fetch("https://dummy", {
           method: "POST",
@@ -373,6 +374,7 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
 }
 
 async function getPromptByID(env, ID) {
+
   let query;
   let stmt;
 
