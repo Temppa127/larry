@@ -177,6 +177,14 @@ router.post('/', async (request, env) => {
         const id = DEL_TIMEOUT.idFromName(interaction.id);
         const obj = DEL_TIMEOUT.get(id);
 
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "TEST PASS"
+          }
+        })
+
+
         await obj.fetch("https://dummy", {
           method: "POST",
           body: JSON.stringify({
