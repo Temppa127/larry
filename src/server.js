@@ -425,6 +425,6 @@ export default {
   fetch: router.fetch,
 };
 
-export { DeletePromptTimeout };
+export { DEL_TIMEOUT };
 
 
