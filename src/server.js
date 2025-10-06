@@ -173,6 +173,17 @@ router.post('/', async (request, env) => {
         DEL_BUFFER[userId] = idOption
 
         
+        const id = DELETE_PROMPT_TIMEOUT.idFromName(interaction.id);
+        const obj = DELETE_PROMPT_TIMEOUT.get(id);
+
+        await obj.fetch("https://dummy", {
+          method: "POST",
+          body: JSON.stringify({
+            interactionToken: interaction.token,
+            applicationId: env.DISCORD_APPLICATION_ID
+          })
+        });
+        
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
@@ -234,7 +245,7 @@ router.post('/', async (request, env) => {
   }
 
   
-if (interaction.type === InteractionType.MESSAGE_COMPONENT) {
+  if (interaction.type === InteractionType.MESSAGE_COMPONENT) {
   const userId = interaction.member.user.id;
   const customId = interaction.data.custom_id;
 
@@ -280,12 +291,8 @@ if (interaction.type === InteractionType.MESSAGE_COMPONENT) {
           flags: InteractionResponseFlags.EPHEMERAL
         }
       });
+    }
   }
-}
-
-
-
-
 
   return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
 });

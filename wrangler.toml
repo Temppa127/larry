@@ -25,3 +25,16 @@ id = "61764b40fc854a74b8e9f8fbeab99101"
 binding = "PROMPTS"
 database_name = "prompts"
 database_id = "d9fd1611-b804-4e99-8612-87627b1724bc"
+
+[[durable_objects]]
+name = "DEL_TIMEOUT"
+class_name = "DEL_TIMEOUT"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["DEL_TIMEOUT"]
+
+[[bindings]]
+type = "durable_object_namespace"
+name = "DELETE_PROMPT_TIMEOUT"
+namespace = "DEL_TIMEOUT"
