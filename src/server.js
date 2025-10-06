@@ -180,7 +180,7 @@ router.post('/', async (request, env) => {
         //   }
         // })
         
-        const obj = DEL_TIMEOUT.getByName(interaction.id);
+        const obj = DEL_TIMEOUT.getByName(interaction.id.toString());
 
         
 
