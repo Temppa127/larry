@@ -1,4 +1,3 @@
-
 export class DEL_TIMEOUT {
   constructor(state, env) {
     this.state = state;
@@ -8,13 +7,10 @@ export class DEL_TIMEOUT {
   async fetch(request) {
     const { interactionToken, applicationId } = await request.json();
 
-    // Store data and set alarm
     await this.state.storage.put("interactionToken", interactionToken);
     await this.state.storage.put("applicationId", applicationId);
 
-    // Set alarm for 30 seconds from now
-    const now = Date.now();
-    this.state.setAlarm(now + 30_000);
+    this.state.setAlarm(Date.now() + 30_000);
 
     return new Response("Alarm set.");
   }
