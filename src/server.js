@@ -425,6 +425,6 @@ export default {
   fetch: router.fetch,
 };
 
-export { DEL_TIMEOUT };
+export { DEL_TIMEOUT } from './del_timeout.js';
 
 
