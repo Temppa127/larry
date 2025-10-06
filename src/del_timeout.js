@@ -10,7 +10,7 @@ export class DEL_TIMEOUT {
     await this.state.storage.put("interactionToken", interactionToken);
     await this.state.storage.put("applicationId", applicationId);
 
-    this.state.setAlarm(Date.now() + 30_000);
+    this.state.storage.setAlarm(Date.now() + 30_000);
 
     return new Response("Alarm set.");
   }
@@ -51,7 +51,7 @@ export class DEL_TIMEOUT {
       },
       body: JSON.stringify({
         content: "Prompt deletion timed out.",
-        components: disabledComponents
+        components: disabledComponents,
       })
     });
   }
