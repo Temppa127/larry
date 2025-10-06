@@ -166,11 +166,37 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
+        const idOption = interaction.data.options?.find(opt => opt.name === "id");
+
+
+
+        
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { content: "test success" },
+          data: {
+            content: "Are you sure you want to delete this prompt?",
+            components: [
+              {
+                type: 1, // Action row
+                components: [
+                  {
+                    type: 2, // Button
+                    label: "Yes",
+                    style: 3, // Green
+                    custom_id: "confirm_delete"
+                  },
+                  {
+                    type: 2,
+                    label: "No",
+                    style: 4, // Red
+                    custom_id: "cancel_delete"
+                  }
+                ]
+              }
+            ],
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
         });
-
       }
 
       case PROMPT_ADD_COMMAND.name.toLowerCase(): {
