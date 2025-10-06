@@ -173,12 +173,12 @@ router.post('/', async (request, env) => {
 
         DEL_BUFFER[userId] = idOption
 
-        return new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: "TEST PASS"
-          }
-        })
+        // return new JsonResponse({
+        //   type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        //   data: {
+        //     content: "TEST PASS"
+        //   }
+        // })
         
         const obj = DEL_TIMEOUT.getByName(interaction.id);
 
