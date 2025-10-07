@@ -181,9 +181,9 @@ router.post('/', async (request, env) => {
         // })
         
         const id = env.DEL_TIMEOUT.idFromName(interaction.id);
-        const obj = env.DEL_TIMEOUT.get(id);
         
-
+        const obj = env.DEL_TIMEOUT.getByName(id);
+        
 
         await obj.fetch("https://dummy", {
           method: "POST",
