@@ -162,7 +162,7 @@ router.post('/', async (request, env) => {
       
       case PROMPT_DELETE_COMMAND.name.toLowerCase(): {
 
-        const userId = interaction.member.user.id;
+        const userId = interaction.member.user.id.value;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
         let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
@@ -195,7 +195,7 @@ router.post('/', async (request, env) => {
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content: "Are you sure you want to delete the prompt with ID: **" + JSON.stringify(idOption) + "**?",
+            content: "Are you sure you want to delete the prompt with ID: **" + JSON.stringify(idOption.value) + "**?",
             components: [
               {
                 type: 1, // Action row
