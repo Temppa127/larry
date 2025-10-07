@@ -169,7 +169,7 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
-        const idOption = interaction.data.options?.find(opt => opt.name === "id");
+        const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
 
         DEL_BUFFER[userId] = idOption
 
@@ -195,7 +195,7 @@ router.post('/', async (request, env) => {
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content: "Are you sure you want to delete the prompt with ID: **" + JSON.stringify(idOption.value) + "**?",
+            content: "Are you sure you want to delete the prompt with ID: **" + idOption + "**?",
             components: [
               {
                 type: 1, // Action row
