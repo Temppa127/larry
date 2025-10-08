@@ -169,16 +169,10 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
-        const idOption = interaction.data.options?.find(opt => opt.name === "id");
+        const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
 
         DEL_BUFFER[userId] = idOption
 
-        // return new JsonResponse({
-        //   type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        //   data: {
-        //     content: "TEST PASS"
-        //   }
-        // })
         
         const id = env.DEL_TIMEOUT.idFromName(interaction.id);
         const obj = env.DEL_TIMEOUT.getByName(id);
@@ -195,7 +189,7 @@ router.post('/', async (request, env) => {
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content: "Are you sure you want to delete the prompt with ID: **" + JSON.stringify(idOption) + "**?",
+            content: "Are you sure you want to delete the prompt with ID: **" + idOption + "**?",
             components: [
               {
                 type: 1, // Action row
