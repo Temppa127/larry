@@ -169,7 +169,7 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
-        const idOption = interaction.data.options?.find(opt => opt.name === "id");
+        const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
 
         DEL_BUFFER[userId] = idOption
 
