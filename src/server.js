@@ -184,9 +184,11 @@ router.post('/', async (request, env) => {
         if(!res){return invalidIdResp}
 
 
-        let prevStub = DEL_BUFFER.userId?.currStub;
-
-        if(prevStub) {prevStub.state.storage.deleteAlarm()}
+        let prev = DEL_BUFFER[userId]
+        if(prev) {
+          let prevStub = prev["currStub"]
+          if (prevStub) {prevStub.state.storage.deleteAlarm()}
+        }
 
         const id = env.DEL_TIMEOUT.idFromName(interaction.id);
         const obj = env.DEL_TIMEOUT.getByName(id);
