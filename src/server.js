@@ -183,7 +183,8 @@ router.post('/', async (request, env) => {
         let res = await getPromptByID(env, idOption)
         if(!res){return invalidIdResp}
 
-
+        if (!DEL_BUFFER[userId]) DEL_BUFFER[userId] = {};
+        
         let prev = DEL_BUFFER[userId]
         if(prev) {
           let prevStubID = prev["currStub"]
