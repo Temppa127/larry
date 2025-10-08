@@ -171,6 +171,16 @@ router.post('/', async (request, env) => {
 
         const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
 
+        let res = await getPromptByID(env, promptID)
+        if(!res){return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Invalid ID",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });}
+
+
         DEL_BUFFER[userId] = idOption
 
         
@@ -254,10 +264,12 @@ router.post('/', async (request, env) => {
   switch (customId) {
     case "confirm_delete": {
       // Perform deletion logic here
-
+      
+      const promptID = DEL_BUFFER[userId];
       
       
-      const promptID = DEL_BUFFER[userId]
+      
+      
       if(!promptID) {return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
@@ -265,6 +277,10 @@ router.post('/', async (request, env) => {
           flags: InteractionResponseFlags.EPHEMERAL
         }
       });}
+
+      await delPromptByID(env, promptID);
+
+      DEL_BUFFER[userId] = null;
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -374,11 +390,24 @@ async function sendPromptToDiscordChannel(env, channelId, row) {
   });
 }
 
+async function delPromptByID(env, ID) {
+  
+  let query;
+  let stmt;
+  query = "DELETE FROM generalPrompts WHERE numberID LIKE ? LIMIT 1";
+  stmt = env.PROMPTS.prepare(query).bind(`${ID}`);
+
+  await stmt.run();
+
+  return true; 
+
+}
+
+
 async function getPromptByID(env, ID) {
 
   let query;
   let stmt;
-
 
   query = "SELECT * FROM generalPrompts WHERE numberID LIKE ? LIMIT 1";
   stmt = env.PROMPTS.prepare(query).bind(`${ID}`);
