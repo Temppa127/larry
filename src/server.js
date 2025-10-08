@@ -162,7 +162,7 @@ router.post('/', async (request, env) => {
       
       case PROMPT_DELETE_COMMAND.name.toLowerCase(): {
 
-        const userId = interaction.member.user.id.value;
+        const userId = interaction.member.user.id;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
         let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
