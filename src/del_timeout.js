@@ -15,6 +15,25 @@ export class DEL_TIMEOUT {
     return new Response("Alarm set.");
   }
 
+  async cancel() {
+    this.state.storage.deleteAlarm();
+
+    const interactionToken = await this.state.storage.get("interactionToken");
+    const applicationId = await this.state.storage.get("applicationId");
+
+    const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
+
+
+    await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bot ${this.env.DISCORD_TOKEN}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+  }
+
   async alarm() {
     const interactionToken = await this.state.storage.get("interactionToken");
     const applicationId = await this.state.storage.get("applicationId");
@@ -42,6 +61,7 @@ export class DEL_TIMEOUT {
         ]
       }
     ];
+  
 
     await fetch(url, {
       method: "PATCH",
