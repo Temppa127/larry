@@ -189,7 +189,7 @@ router.post('/', async (request, env) => {
           let prevStubID = prev["currStub"]
           if (prevStubID) {
             const prevStub = env.DEL_TIMEOUT.getByName(prevStubID);
-            prevStub.cancel()
+            await prevStub.cancel()
           }
         }
 
