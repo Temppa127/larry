@@ -1,4 +1,4 @@
-import { AutoRouter } from 'itty-router';
+import { AutoRouter, json } from 'itty-router';
 import {
   InteractionResponseType,
   InteractionType,
@@ -195,7 +195,7 @@ router.post('/', async (request, env) => {
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content: "Are you sure you want to delete the prompt with ID: **" + idOption + "**?",
+            content: "Are you sure you want to delete the prompt with ID: **" + JSON.stringify(idOption) + "**?",
             components: [
               {
                 type: 1, // Action row
