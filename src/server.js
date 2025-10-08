@@ -169,16 +169,19 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
-        const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
-
-        let res = await getPromptByID(env, promptID)
-        if(!res){return new JsonResponse({
+        let invalidIdResp = new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content: "Invalid ID",
             flags: InteractionResponseFlags.EPHEMERAL
           }
-        });}
+        });
+
+        const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
+        if(!idOption){return invalidIdResp}
+
+        let res = await getPromptByID(env, idOption)
+        if(!res){return invalidIdResp}
 
 
         DEL_BUFFER[userId] = idOption
