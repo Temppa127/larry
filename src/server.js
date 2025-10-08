@@ -186,8 +186,11 @@ router.post('/', async (request, env) => {
 
         let prev = DEL_BUFFER[userId]
         if(prev) {
-          let prevStub = prev["currStub"]
-          if (prevStub) {prevStub.cancel()}
+          let prevStubID = prev["currStub"]
+          if (prevStubID) {
+            const prevStub = env.DEL_TIMEOUT.getByName(prevStubID);
+            prevStub.cancel()
+          }
         }
 
         const id = env.DEL_TIMEOUT.idFromName(interaction.id);
