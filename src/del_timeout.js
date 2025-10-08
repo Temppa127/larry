@@ -16,7 +16,7 @@ export class DEL_TIMEOUT {
   }
 
   async cancel() {
-    await this.state.storage.deleteAlarm();
+    this.state.storage.deleteAlarm();
 
     const interactionToken = await this.state.storage.get("interactionToken");
     const applicationId = await this.state.storage.get("applicationId");
