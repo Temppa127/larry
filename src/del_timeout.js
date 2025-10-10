@@ -19,7 +19,7 @@ export class DEL_TIMEOUT {
   }
 
   async cancel() {
-    this.state.storage.deleteAlarm();
+    await this.state.storage.deleteAlarm();
 
     const interactionToken = await this.state.storage.get("interactionToken");
     const applicationId = await this.state.storage.get("applicationId");
@@ -38,6 +38,7 @@ export class DEL_TIMEOUT {
       }
     });
 
+    await this.state.storage.deleteAll();
     return new Response("Cancelled");
   }
 
