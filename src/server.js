@@ -189,8 +189,13 @@ router.post('/', async (request, env) => {
         if(prev) {
           let prevStubID = prev["currStub"]
           if (prevStubID) {
-            const prevStub = env.DEL_TIMEOUT.getByName(prevStubID);
-            await prevStub.cancel()
+            return new JsonResponse({
+              type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+              data: {
+                content: "Resolve previous deletion command before starting a new one",
+                flags: InteractionResponseFlags.EPHEMERAL
+              }
+            });
           }
         }
 
@@ -281,8 +286,7 @@ router.post('/', async (request, env) => {
     case "confirm_delete": {
       // Perform deletion logic here
       
-      const promptID = DEL_BUFFER[userId];
-      
+      const promptID = DEL_BUFFER[userId]["id"];
       
       
       
@@ -296,7 +300,8 @@ router.post('/', async (request, env) => {
 
       await delPromptByID(env, promptID);
 
-      DEL_BUFFER[userId] = null;
+      DEL_BUFFER[userId]["id"] = null;
+      DEL_BUFFER[userId]["currStub"] = null;
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -308,6 +313,10 @@ router.post('/', async (request, env) => {
     }
 
     case "cancel_delete": {
+
+      DEL_BUFFER[userId]["id"] = null;
+      DEL_BUFFER[userId]["currStub"] = null;
+
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
