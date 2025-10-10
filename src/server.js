@@ -182,7 +182,7 @@ router.post('/', async (request, env) => {
         if(!res){return invalidIdResp}
 
         
-        let row = getRowFromBuffer(env, userId)
+        let row = await getRowFromBuffer(env, userId)
         if(row) {
           return new JsonResponse({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -196,7 +196,7 @@ router.post('/', async (request, env) => {
         const id = env.DEL_TIMEOUT.idFromName(interaction.id);
         const obj = env.DEL_TIMEOUT.getByName(id);
 
-        insertIntoBuffer(env, userId, stubId, idOption)        
+        await insertIntoBuffer(env, userId, stubId, idOption);
 
         await obj.fetch("https://dummy", {
           method: "POST",
@@ -276,7 +276,7 @@ router.post('/', async (request, env) => {
     case "confirm_delete": {
       // Perform deletion logic here
       
-      const row = getRowFromBuffer(env, userId)
+      const row = await getRowFromBuffer(env, userId)
 
       if(!row) {return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
