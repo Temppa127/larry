@@ -317,10 +317,6 @@ router.post('/', async (request, env) => {
         }
       });}
 
-      const promptID = row.deletingPromptId;
-
-      await delPromptByID(env, promptID);
-
       const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
       const obj = env.DEL_TIMEOUT.getByName(id);
 
