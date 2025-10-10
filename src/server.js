@@ -6,6 +6,7 @@ import {
   InteractionResponseFlags,
 } from 'discord-interactions';
 import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND} from './commands.js';
+import { clearDelBuffer } from './utils.js';
 
 const PERM_LEVELS = {
   "ADMIN": 1000,
@@ -306,8 +307,7 @@ router.post('/', async (request, env) => {
       await obj.cancel()
 
 
-      DEL_BUFFER[userId]["id"] = null;
-      DEL_BUFFER[userId]["currStub"] = null;
+      clearDelBuffer(userId)
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -321,8 +321,7 @@ router.post('/', async (request, env) => {
     case "cancel_delete": {
 
 
-      DEL_BUFFER[userId]["id"] = null;
-      DEL_BUFFER[userId]["currStub"] = null;
+      clearDelBuffer(userId);
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -435,13 +434,7 @@ async function delPromptByID(env, ID) {
 
 }
 
-async function clearDelBuffer(userId) {
 
-  DEL_BUFFER[userId]["id"] = null;
-  DEL_BUFFER[userId]["currStub"] = null;
-
-  return true;
-}
 
 
 async function getPromptByID(env, ID) {

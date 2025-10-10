@@ -1,4 +1,4 @@
-import server from "./server";
+import { clearDelBuffer } from "./utils.js";
 
 export class DEL_TIMEOUT {
   constructor(state, env) {
@@ -25,7 +25,7 @@ export class DEL_TIMEOUT {
     const applicationId = await this.state.storage.get("applicationId");
     const userId = await this.state.storage.get("userId");
     
-    await server.clearDelBuffer(userId)
+    clearDelBuffer(userId)
 
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
 
@@ -82,7 +82,8 @@ export class DEL_TIMEOUT {
         components: disabledComponents,
       })
     });
-    await server.clearDelBuffer(userId)
+
+    clearDelBuffer(userId)
     await this.state.storage.deleteAll();
   }
 }
