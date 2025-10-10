@@ -41,11 +41,14 @@ export class DEL_TIMEOUT {
 
 
     await fetch(url, {
-      method: "DELETE",
+      method: "PATCH",
       headers: {
         "Authorization": `Bot ${this.env.DISCORD_TOKEN}`,
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify({
+        content: "Interaction finished",
+      })
     });
 
     await this.state.storage.deleteAll();
