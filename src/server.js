@@ -212,7 +212,8 @@ router.post('/', async (request, env) => {
           method: "POST",
           body: JSON.stringify({
             interactionToken: interaction.token,
-            applicationId: env.DISCORD_APPLICATION_ID
+            applicationId: env.DISCORD_APPLICATION_ID,
+            userId: userId
           })
         });
         
