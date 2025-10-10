@@ -1,3 +1,5 @@
+import server from "./server";
+
 export class DEL_TIMEOUT {
   constructor(state, env) {
     this.state = state;
@@ -5,10 +7,11 @@ export class DEL_TIMEOUT {
   }
 
   async fetch(request) {
-    const { interactionToken, applicationId } = await request.json();
+    const { interactionToken, applicationId, userId } = await request.json();
 
     await this.state.storage.put("interactionToken", interactionToken);
     await this.state.storage.put("applicationId", applicationId);
+    await this.state.storage.put("userId", userId);
 
     this.state.storage.setAlarm(Date.now() + 30_000);
 
@@ -38,6 +41,7 @@ export class DEL_TIMEOUT {
   async alarm() {
     const interactionToken = await this.state.storage.get("interactionToken");
     const applicationId = await this.state.storage.get("applicationId");
+    const userId = await this.state.storage.get("userId");
 
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
 
@@ -75,6 +79,7 @@ export class DEL_TIMEOUT {
         components: disabledComponents,
       })
     });
+    await server.clearDelBuffer(userId)
     await this.state.storage.deleteAll();
   }
 }

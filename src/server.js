@@ -6,7 +6,6 @@ import {
   InteractionResponseFlags,
 } from 'discord-interactions';
 import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND} from './commands.js';
-import { DEL_TIMEOUT } from './del_timeout.js';
 
 const PERM_LEVELS = {
   "ADMIN": 1000,
@@ -426,6 +425,14 @@ async function delPromptByID(env, ID) {
 
   return true; 
 
+}
+
+async function clearDelBuffer(userId) {
+
+  DEL_BUFFER[userId]["id"] = null;
+  DEL_BUFFER[userId]["currStub"] = null;
+
+  return true;
 }
 
 
