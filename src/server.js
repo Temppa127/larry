@@ -431,7 +431,7 @@ async function getRowFromBuffer(env,ID) {
 
   const results = await stmt.run();
 
-  if (results.success) {
+  if (results.success && results.results.length > 0) {
     return results.results[0];
   }
   return null;
