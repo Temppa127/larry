@@ -300,6 +300,12 @@ router.post('/', async (request, env) => {
 
       await delPromptByID(env, promptID);
 
+      const id = env.DEL_TIMEOUT.idFromName(DEL_BUFFER[userId]["currStub"]);
+      const obj = env.DEL_TIMEOUT.getByName(id);
+
+      await obj.cancel()
+
+
       DEL_BUFFER[userId]["id"] = null;
       DEL_BUFFER[userId]["currStub"] = null;
 
@@ -313,6 +319,7 @@ router.post('/', async (request, env) => {
     }
 
     case "cancel_delete": {
+
 
       DEL_BUFFER[userId]["id"] = null;
       DEL_BUFFER[userId]["currStub"] = null;

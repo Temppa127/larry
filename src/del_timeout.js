@@ -23,6 +23,9 @@ export class DEL_TIMEOUT {
 
     const interactionToken = await this.state.storage.get("interactionToken");
     const applicationId = await this.state.storage.get("applicationId");
+    const userId = await this.state.storage.get("userId");
+    
+    await server.clearDelBuffer(userId)
 
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
 
