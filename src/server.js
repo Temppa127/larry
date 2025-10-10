@@ -307,7 +307,24 @@ router.post('/', async (request, env) => {
     case "cancel_delete": {
 
 
-      await clearDelBuffer(env,userId);
+      const row = await getRowFromBuffer(env, userId)
+
+      if(!row) {return new JsonResponse({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Unknown error",
+          flags: InteractionResponseFlags.EPHEMERAL
+        }
+      });}
+
+      const promptID = row.deletingPromptId;
+
+      await delPromptByID(env, promptID);
+
+      const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
+      const obj = env.DEL_TIMEOUT.getByName(id);
+
+      await obj.cancel()
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
