@@ -14,8 +14,6 @@ const PERM_LEVELS = {
   "DEFAULT": 0
 }
 
-let DEL_BUFFER = {}
-
 
 
 
@@ -183,31 +181,22 @@ router.post('/', async (request, env) => {
         let res = await getPromptByID(env, idOption)
         if(!res){return invalidIdResp}
 
-        if (!DEL_BUFFER[userId]) DEL_BUFFER[userId] = {};
         
-        let prev = DEL_BUFFER[userId]
-        if(prev) {
-          let prevStubID = prev["currStub"]
-          if (prevStubID) {
-            return new JsonResponse({
-              type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-              data: {
-                content: "Resolve previous deletion command before starting a new one",
-                flags: InteractionResponseFlags.EPHEMERAL
-              }
-            });
-          }
+        let row = getRowFromBuffer(env, userId)
+        if(row) {
+          return new JsonResponse({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+              content: "Resolve previous deletion command before starting a new one",
+              flags: InteractionResponseFlags.EPHEMERAL
+            }
+          });
         }
 
         const id = env.DEL_TIMEOUT.idFromName(interaction.id);
         const obj = env.DEL_TIMEOUT.getByName(id);
 
-        DEL_BUFFER[userId]["id"] = idOption;
-        DEL_BUFFER[userId]["currStub"] = id;
-
-        
-        
-        
+        insertIntoBuffer(env, userId, stubId, idOption)        
 
         await obj.fetch("https://dummy", {
           method: "POST",
@@ -287,11 +276,9 @@ router.post('/', async (request, env) => {
     case "confirm_delete": {
       // Perform deletion logic here
       
-      const promptID = DEL_BUFFER[userId]["id"];
-      
-      
-      
-      if(!promptID) {return new JsonResponse({
+      const row = getRowFromBuffer(env, userId)
+
+      if(!row) {return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           content: "Unknown error",
@@ -299,15 +286,14 @@ router.post('/', async (request, env) => {
         }
       });}
 
+      const promptID = row.deletingPromptId;
+
       await delPromptByID(env, promptID);
 
-      const id = env.DEL_TIMEOUT.idFromName(DEL_BUFFER[userId]["currStub"]);
+      const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
       const obj = env.DEL_TIMEOUT.getByName(id);
 
       await obj.cancel()
-
-
-      clearDelBuffer(userId)
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -321,7 +307,7 @@ router.post('/', async (request, env) => {
     case "cancel_delete": {
 
 
-      clearDelBuffer(userId);
+      await clearDelBuffer(env,userId);
 
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -435,6 +421,33 @@ async function delPromptByID(env, ID) {
 }
 
 
+async function getRowFromBuffer(env,ID) {
+
+  let query;
+  let stmt;
+
+  query = "SELECT * FROM del_buffer WHERE numberID = ? LIMIT 1";
+  stmt = env.TEMP_DATA.prepare(query).bind(`${ID}`);
+
+  const results = await stmt.run();
+
+  if (results.results.length > 0) {
+    return results.results[0];
+  }
+  return null;
+
+}
+
+async function insertIntoBuffer(env, userId, stubId, promptId){
+  let query;
+  let stmt;
+
+  query = "INSERT INTO del_buffer (userId, currStubId, deletingPromptId) VALUES (?, ?, ?)";
+  stmt = env.TEMP_DATA.prepare(query).bind(`${userId}`,`${stubId}`,`${promptId}`);
+  
+  await stmt.run();
+
+}
 
 
 async function getPromptByID(env, ID) {
@@ -442,7 +455,7 @@ async function getPromptByID(env, ID) {
   let query;
   let stmt;
 
-  query = "SELECT * FROM generalPrompts WHERE numberID LIKE ? LIMIT 1";
+  query = "SELECT * FROM generalPrompts WHERE numberID = ? LIMIT 1";
   stmt = env.PROMPTS.prepare(query).bind(`${ID}`);
 
   const results = await stmt.run();

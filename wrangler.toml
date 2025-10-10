@@ -26,6 +26,11 @@ binding = "PROMPTS"
 database_name = "prompts"
 database_id = "d9fd1611-b804-4e99-8612-87627b1724bc"
 
+[[d1_databases]]
+binding = "TEMP_DATA"
+database_name = "temp_data"
+database_id = "4c4cbb10-c08e-471f-9aa6-0af86c219397"
+
 
 [[durable_objects.bindings]]
 name = "DEL_TIMEOUT"
