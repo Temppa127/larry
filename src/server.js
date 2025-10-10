@@ -426,12 +426,12 @@ async function getRowFromBuffer(env,ID) {
   let query;
   let stmt;
 
-  query = "SELECT * FROM del_buffer WHERE numberID = ? LIMIT 1";
+  query = "SELECT * FROM del_buffer WHERE userId = ? LIMIT 1";
   stmt = env.TEMP_DATA.prepare(query).bind(`${ID}`);
 
   const results = await stmt.run();
 
-  if (results.results.length > 0) {
+  if (results.success) {
     return results.results[0];
   }
   return null;
