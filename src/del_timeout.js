@@ -18,7 +18,7 @@ export class DEL_TIMEOUT {
     return new Response("Alarm set.");
   }
 
-  async cancel() {
+  async cancel(cancelContext) {
     await this.state.storage.deleteAlarm();
 
     const interactionToken = await this.state.storage.get("interactionToken");
@@ -30,13 +30,42 @@ export class DEL_TIMEOUT {
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
 
 
+    const disabledComponents = [
+      {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            label: "Yes",
+            style: 3,
+            custom_id: "confirm_delete",
+            disabled: true
+          },
+          {
+            type: 2,
+            label: "No",
+            style: 4,
+            custom_id: "cancel_delete",
+            disabled: true
+          }
+        ]
+      }
+    ];
+  
+
     await fetch(url, {
-      method: "DELETE",
+      method: "PATCH",
       headers: {
         "Authorization": `Bot ${this.env.DISCORD_TOKEN}`,
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify({
+        content: cancelContext,
+        components: disabledComponents,
+      })
     });
+
+
 
     await this.state.storage.deleteAll();
     return new Response("Cancelled");

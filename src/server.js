@@ -320,15 +320,16 @@ router.post('/', async (request, env) => {
       const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
       const obj = env.DEL_TIMEOUT.getByName(id);
     
-      //await obj.cancel()
-
-      return new JsonResponse({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          content: "Deletion cancelled.",
-          flags: InteractionResponseFlags.EPHEMERAL
-        }
-      });
+      await obj.cancel("Deletion cancelled.")
+      
+      return null;
+      // return new JsonResponse({
+      //   type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      //   data: {
+      //     content: "Deletion cancelled.",
+      //     flags: InteractionResponseFlags.EPHEMERAL
+      //   }
+      // });
     }
 
     default:
