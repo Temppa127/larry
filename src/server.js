@@ -427,7 +427,7 @@ async function getRowFromBuffer(env,ID) {
   let stmt;
 
   query = "SELECT * FROM del_buffer WHERE userId = ?";
-  stmt = env.TEMP_DATA.prepare(query).bind(Number(ID));
+  stmt = env.TEMP_DATA.prepare(query).bind(`${ID}`);
 
   const results = await stmt.run();
 
@@ -443,7 +443,7 @@ async function insertIntoBuffer(env, userId, stubId, promptId){
   let stmt;
 
   query = "INSERT INTO del_buffer (userId, currStubId, deletingPromptId) VALUES (?, ?, ?)";
-  stmt = env.TEMP_DATA.prepare(query).bind(Number(userId), Number(stubId), Number(promptId));
+  stmt = env.TEMP_DATA.prepare(query).bind(`${userId}`,`${stubId}`,`${promptId}`);
   
   await stmt.run();
 
