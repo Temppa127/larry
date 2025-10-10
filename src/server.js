@@ -295,12 +295,7 @@ router.post('/', async (request, env) => {
 
       
       await obj.fetch("https://dummy/cancel", {
-        method: "POST",
-        body: JSON.stringify({
-            interactionToken: interaction.token,
-            applicationId: env.DISCORD_APPLICATION_ID,
-            userId: userId
-          })
+        method: "POST"
       });
 
 
@@ -331,12 +326,7 @@ router.post('/', async (request, env) => {
     
       
       await obj.fetch("https://dummy/cancel", {
-        method: "POST",
-        body: JSON.stringify({
-            interactionToken: interaction.token,
-            applicationId: env.DISCORD_APPLICATION_ID,
-            userId: userId
-          })
+        method: "POST"
       });
 
       
