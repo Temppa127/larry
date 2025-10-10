@@ -426,7 +426,7 @@ async function getRowFromBuffer(env,ID) {
   let query;
   let stmt;
 
-  query = "SELECT * FROM del_buffer WHERE userId = ? LIMIT 1";
+  query = "SELECT * FROM del_buffer WHERE userId = ?";
   stmt = env.TEMP_DATA.prepare(query).bind(Number(ID));
 
   const results = await stmt.run();
