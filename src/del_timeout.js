@@ -7,22 +7,21 @@ export class DEL_TIMEOUT {
   }
 
   async fetch(request) {
-    const { interactionToken, applicationId, userId } = await request.json();
-
-    
-    
     const url = new URL(request.url);
     const pathname = url.pathname;
 
 
-    if (pathname === "/cancel") {
-        return await this.cancel();
-    }
 
+
+    const { interactionToken, applicationId, userId } = await request.json();
 
     await this.state.storage.put("interactionToken", interactionToken);
     await this.state.storage.put("applicationId", applicationId);
     await this.state.storage.put("userId", userId);
+
+    if (pathname === "/cancel") {
+        return await this.cancel();
+    }
 
     this.state.storage.setAlarm(Date.now() + 30_000);
 
