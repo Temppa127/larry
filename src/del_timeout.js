@@ -9,6 +9,7 @@ export class DEL_TIMEOUT {
   async fetch(request) {
     const url = new URL(request.url);
     const pathname = url.pathname;
+    console.log(pathname)
 
     if (pathname === "/cancel") {
       return await this.cancel();
