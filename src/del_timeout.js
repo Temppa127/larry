@@ -9,9 +9,10 @@ export class DEL_TIMEOUT {
   async fetch(request) {
     const url = new URL(request.url);
     const pathname = url.pathname;
-    console.log(pathname)
+    console.log("Pathname " + pathname)
 
     if (pathname === "/cancel") {
+      console.log("Going into cancel")
       return await this.cancel();
     }
 
@@ -30,7 +31,7 @@ export class DEL_TIMEOUT {
 
   async cancel() {
   
-
+    console.log("In cancel")
     const interactionToken = await this.state.storage.get("interactionToken");
     const applicationId = await this.state.storage.get("applicationId");
     const userId = await this.state.storage.get("userId");
