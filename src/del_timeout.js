@@ -40,7 +40,7 @@ export class DEL_TIMEOUT {
 
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
 
-
+    console.log("Cancel 1")
     await fetch(url, {
       method: "PATCH",
       headers: {
@@ -51,9 +51,10 @@ export class DEL_TIMEOUT {
         content: "Interaction finished",
       })
     });
-
+    console.log("Cancel 2")
     await this.state.storage.deleteAlarm();
     await this.state.storage.deleteAll();
+    console.log("Cancel 3") 
     return new Response("Cancelled");
   }
 
