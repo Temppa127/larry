@@ -22,6 +22,9 @@ export class DEL_TIMEOUT {
     await this.state.storage.put("applicationId", applicationId);
     await this.state.storage.put("userId", userId);
 
+    console.log("Token1 " + interactionToken)
+    console.log("Appid1 " + applicationId)
+    console.log("User1 " + userId)
    
 
     this.state.storage.setAlarm(Date.now() + 30_000);
@@ -36,6 +39,11 @@ export class DEL_TIMEOUT {
     const applicationId = await this.state.storage.get("applicationId");
     const userId = await this.state.storage.get("userId");
     
+    console.log("Token2 " + interactionToken)
+    console.log("Appid2 " + applicationId)
+    console.log("User2 " + userId)
+
+
     await clearDelBuffer(this.env, userId)
 
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
