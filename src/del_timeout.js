@@ -11,12 +11,11 @@ export class DEL_TIMEOUT {
     const pathname = url.pathname;
     console.log("Pathname " + pathname)
 
+    const { interactionToken, applicationId, userId } = await request.json();
     if (pathname === "/cancel") {
       console.log("Going into cancel")
-      return await this.cancel();
+      return await this.cancel(interactionToken, applicationId, userId);
     }
-
-    const { interactionToken, applicationId, userId } = await request.json();
 
     await this.state.storage.put("interactionToken", interactionToken);
     await this.state.storage.put("applicationId", applicationId);
@@ -32,7 +31,7 @@ export class DEL_TIMEOUT {
     return new Response("Alarm set.");
   }
 
-  async cancel() {
+  async cancel() { 
   
     console.log("In cancel")
     const interactionToken = await this.state.storage.get("interactionToken");
