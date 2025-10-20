@@ -193,8 +193,8 @@ router.post('/', async (request, env) => {
           });
         }
 
-        const id = env.DEL_TIMEOUT.idFromName(interaction.id);
-        const obj = env.DEL_TIMEOUT.getByName(id);
+        const id = env.DEL_TIMEOUT.newUniqueId();
+        const obj = env.DEL_TIMEOUT.get(id);
 
         await insertIntoBuffer(env, userId, id, idOption);
 
@@ -290,8 +290,8 @@ router.post('/', async (request, env) => {
 
       await delPromptByID(env, promptID);
 
-      const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
-      const obj = env.DEL_TIMEOUT.getByName(id);
+      const id = row.currStubId;
+      const obj = env.DEL_TIMEOUT.get(id);
 
 
       await obj.fetch("https://dummy/cancel", {method: "POST"});
