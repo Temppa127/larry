@@ -494,7 +494,7 @@ async function insertPrompt(env, content, genres, id){
   let stmt;
 
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
-  stmt = env.TEMP_DATA.prepare(query).bind(`${id}`,`${content}`,`${genres}`);
+  stmt = env.PROMPTS.prepare(query).bind(`${id}`,`${content}`,`${genres}`);
   
   await stmt.run();
 }
