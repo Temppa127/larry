@@ -290,11 +290,11 @@ router.post('/', async (request, env) => {
 
       await delPromptByID(env, promptID);
 
-      const id = row.currStubId;
+      const id = env.DEL_TIMEOUT.idFromString(row.currStubId);
       const obj = env.DEL_TIMEOUT.get(id);
 
 
-      await obj.cancel() //.fetch("https://dummy/cancel", {method: "POST"});
+      await obj.fetch("https://dummy/cancel", {method: "POST"});
 
 
       return new JsonResponse({
@@ -319,18 +319,12 @@ router.post('/', async (request, env) => {
         }
       });}
 
-      const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
-      const obj = env.DEL_TIMEOUT.getByName(id);
+      const id = env.DEL_TIMEOUT.idFromString(row.currStubId);
+      const obj = env.DEL_TIMEOUT.get(id);
     
-      await obj.cancel()
-      // await obj.fetch("https://dummy/cancel", {
-      //     method: "POST",
-      //     body: JSON.stringify({
-      //       interactionToken: interaction.token,
-      //       applicationId: env.DISCORD_APPLICATION_ID,
-      //       userId: userId
-      //     })
-      //   });'
+      await obj.fetch("https://dummy/cancel", {
+          method: "POST"
+        });
 
       
       return new JsonResponse({

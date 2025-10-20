@@ -11,12 +11,12 @@ export class DEL_TIMEOUT {
     const pathname = url.pathname;
     console.log("Pathname " + pathname)
 
-    const { interactionToken, applicationId, userId } = await request.json();
     if (pathname === "/cancel") {
       console.log("Going into cancel")
-      return await this.cancel(interactionToken, applicationId, userId);
+      return await this.cancel();
     }
 
+    const { interactionToken, applicationId, userId } = await request.json();
     await this.state.storage.put("interactionToken", interactionToken);
     await this.state.storage.put("applicationId", applicationId);
     await this.state.storage.put("userId", userId);
