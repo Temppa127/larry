@@ -313,9 +313,9 @@ router.post('/', async (request, env) => {
       await delPromptByID(env, promptID);
 
       const context = "general"
-      const lowest = env.LOWEST_AVAILABLE.get(context) //TODO: make server-based
+      const lowest = await env.LOWEST_AVAILABLE.get(context) //TODO: make server-based
 
-      if(lowest > promptID && promptID > 0) {env.LOWEST_AVAILABLE.put(context, promptID)}
+      if(lowest > promptID && promptID > 0) {await env.LOWEST_AVAILABLE.put(context, promptID)}
       
       
       const id = env.DEL_TIMEOUT.idFromString(row.currStubId);
@@ -502,7 +502,8 @@ async function insertPrompt(env, content, genres, id){
   let stmt;
 
   if(!id) {
-    id = env.LOWEST_AVAILABLE.get("general") //TODO: server dependent
+    id = await env.LOWEST_AVAILABLE.get("general") //TODO: server dependent
+    await env.LOWEST_AVAILABLE.put("general", 1 + id)
   }
 
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
