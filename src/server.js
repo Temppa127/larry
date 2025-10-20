@@ -252,7 +252,7 @@ router.post('/', async (request, env) => {
         if(notEnoughPerms) {return notEnoughPerms;}
 
         const idOption = interaction.data.options?.find(opt => opt.name === "id").value
-        if(!idOption){return invalidResp}
+        if(!idOption){idOption = null}
         const contentOption = interaction.data.options?.find(opt => opt.name === "content").value
         if(!contentOption){return invalidResp}
         const genresOption = interaction.data.options?.find(opt => opt.name === "genres").value
@@ -310,6 +310,12 @@ router.post('/', async (request, env) => {
 
       await delPromptByID(env, promptID);
 
+      const context = "general"
+      const lowest = env.LOWEST_AVAILABLE.get(context) //TODO: make server-based
+
+      if(lowest > promptID && promptID > 0) {env.LOWEST_AVAILABLE.put(context, promptID)}
+      
+      
       const id = env.DEL_TIMEOUT.idFromString(row.currStubId);
       const obj = env.DEL_TIMEOUT.get(id);
 
@@ -492,6 +498,10 @@ async function insertIntoBuffer(env, userId, stubId, promptId){
 async function insertPrompt(env, content, genres, id){
   let query;
   let stmt;
+
+  if(!id) {
+    id = env.LOWEST_AVAILABLE.get("general") //TODO: server dependent
+  }
 
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
   stmt = env.PROMPTS.prepare(query).bind(`${id}`,`${content}`,`${genres}`);
