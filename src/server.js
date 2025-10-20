@@ -243,10 +243,19 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
+        const idOption = interaction.data.options?.find(opt => opt.name === "id").value
+        const contentOption = interaction.data.options?.find(opt => opt.name === "content").value
+        const genresOption = interaction.data.options?.find(opt => opt.name === "genres").value
+
+        await insertPrompt(env, contentOption, genresOption, idOption);
+
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: { content: "test success" },
         });
+
+
+
       }
 
       case CHANNEL_COMMAND.name.toLowerCase(): {
@@ -467,6 +476,15 @@ async function insertIntoBuffer(env, userId, stubId, promptId){
 
 }
 
+async function insertPrompt(env, content, genres, id){
+  let query;
+  let stmt;
+
+  query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
+  stmt = env.TEMP_DATA.prepare(query).bind(`${id}`,`${content}`,`${genres}`);
+  
+  await stmt.run();
+}
 
 async function getPromptByID(env, ID) {
 
