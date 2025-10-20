@@ -300,7 +300,7 @@ router.post('/', async (request, env) => {
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: "Prompt deleted.",
+          content: "Prompt #" + promptID + " deleted.",
           flags: InteractionResponseFlags.EPHEMERAL
         }
       });
@@ -319,6 +319,8 @@ router.post('/', async (request, env) => {
         }
       });}
 
+      const promptID = row.deletingPromptId;
+
       const id = env.DEL_TIMEOUT.idFromString(row.currStubId);
       const obj = env.DEL_TIMEOUT.get(id);
     
@@ -330,7 +332,7 @@ router.post('/', async (request, env) => {
       return new JsonResponse({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: "Deletion cancelled.",
+          content: "Deletion of #" + promptID + " cancelled.",
           flags: InteractionResponseFlags.EPHEMERAL
         }
       });
