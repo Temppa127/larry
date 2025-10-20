@@ -47,16 +47,16 @@ export class DEL_TIMEOUT {
 
     const url = `https://discord.com/api/v10/webhooks/${applicationId}/${interactionToken}/messages/@original`;
 
-    console.log("Cancel 1")
+    console.log("Cancel 1 ")
     await fetch(url, {
-      method: "PATCH",
+      method: "DELETE",
       headers: {
         "Authorization": `Bot ${this.env.DISCORD_TOKEN}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        content: "Interaction finished",
-      })
+      //body: JSON.stringify({
+      //  content: "Interaction finished",
+      //})
     });
     console.log("Cancel 2")
     await this.state.storage.deleteAlarm();
