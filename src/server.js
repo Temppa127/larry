@@ -294,7 +294,7 @@ router.post('/', async (request, env) => {
       const obj = env.DEL_TIMEOUT.get(id);
 
 
-      await obj.fetch("https://dummy/cancel", {method: "POST"});
+      await obj.cancel() //.fetch("https://dummy/cancel", {method: "POST"});
 
 
       return new JsonResponse({
