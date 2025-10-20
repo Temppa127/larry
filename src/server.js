@@ -322,15 +322,15 @@ router.post('/', async (request, env) => {
       const id = env.DEL_TIMEOUT.idFromName(row.currStubId);
       const obj = env.DEL_TIMEOUT.getByName(id);
     
-      
-      await obj.fetch("https://dummy/cancel", {
-          method: "POST",
-          body: JSON.stringify({
-            interactionToken: interaction.token,
-            applicationId: env.DISCORD_APPLICATION_ID,
-            userId: userId
-          })
-        });
+      await obj.cancel()
+      // await obj.fetch("https://dummy/cancel", {
+      //     method: "POST",
+      //     body: JSON.stringify({
+      //       interactionToken: interaction.token,
+      //       applicationId: env.DISCORD_APPLICATION_ID,
+      //       userId: userId
+      //     })
+      //   });'
 
       
       return new JsonResponse({
