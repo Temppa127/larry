@@ -503,7 +503,7 @@ async function insertPrompt(env, content, genres, id){
 
   if(!id) {
     id = await env.LOWEST_AVAILABLE.get("general") //TODO: server dependent
-    await env.LOWEST_AVAILABLE.put("general", 1 + id)
+    await env.LOWEST_AVAILABLE.put("general", String(Number(id) + 1))
   }
 
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
