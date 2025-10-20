@@ -251,7 +251,7 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
-        const idOption = interaction.data.options?.find(opt => opt.name === "id").value
+        let idOption = interaction.data.options?.find(opt => opt.name === "id").value
         if(!idOption){idOption = null}
         const contentOption = interaction.data.options?.find(opt => opt.name === "content").value
         if(!contentOption){return invalidResp}
