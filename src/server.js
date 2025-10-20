@@ -239,13 +239,24 @@ router.post('/', async (request, env) => {
         const userId = interaction.member.user.id;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
+        let invalidResp = new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Invalid input",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });
+
         let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
         const idOption = interaction.data.options?.find(opt => opt.name === "id").value
+        if(!idOption){return invalidResp}
         const contentOption = interaction.data.options?.find(opt => opt.name === "content").value
+        if(!contentOption){return invalidResp}
         const genresOption = interaction.data.options?.find(opt => opt.name === "genres").value
+        if(!genresOption){return invalidResp}
 
         await insertPrompt(env, contentOption, genresOption, idOption);
 
