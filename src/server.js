@@ -251,15 +251,16 @@ router.post('/', async (request, env) => {
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
+        console.log("test 1")
         let idOption = interaction.data.options?.find(opt => opt.name === "id").value
-        
+        console.log("test 2")
         const contentOption = interaction.data.options?.find(opt => opt.name === "content").value
         if(!contentOption){return invalidResp}
         const genresOption = interaction.data.options?.find(opt => opt.name === "genres").value
         if(!genresOption){return invalidResp}
-
+        console.log("test 3")
         await insertPrompt(env, contentOption, genresOption, idOption);
-
+        console.log("test 4")
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: { content: "test success" },
