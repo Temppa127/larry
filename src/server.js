@@ -522,13 +522,15 @@ async function insertPrompt(env, content, genres, id){
   let stmt;
 
   if(!id) {
-    id = await env.LOWEST_AVAILABLE.get("general") //TODO: server dependent
+    id = Number(await env.LOWEST_AVAILABLE.get("general")) //TODO: server dependent
     let offset = 1
     let isTaken = getPromptByID(env, id + offset)
 
     while(isTaken){
       offset += 1
-      isTaken = getPromptByID(env, id + offset)
+      bool = getPromptByID(env, id + offset)
+      console.log("Slot " + (id + offset) + " is taken: " + bool)
+      isTaken = bool
     }
 
     
@@ -554,7 +556,7 @@ async function getPromptByID(env, ID) {
   if (results.results.length > 0) {
     return results.results[0];
   }
-  return null;
+  return false;
 
 }
 
