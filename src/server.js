@@ -270,7 +270,7 @@ let idTakenResp = new JsonResponse({
         let idOption = interaction.data.options?.find(opt => opt.name === "id")
         if(idOption) {
           idOption = idOption.value
-          isTaken = getPromptByID(env, idOption)
+          isTaken = await getPromptByID(env, idOption)
 
           if (isTaken) {return isTakenResp}
         }
@@ -526,15 +526,15 @@ async function insertPrompt(env, content, genres, id){
     console.log("id 1")
     id = Number(await env.LOWEST_AVAILABLE.get("general")) //TODO: server dependent
     let offset = 1
-    let isTaken = getPromptByID(env, id + offset)
+    let isTaken = await getPromptByID(env, id + offset)
     console.log("id 2")
     while(isTaken){
       console.log("id 2.1")
       offset += 1
       console.log("id 2.2")
-      let bool = getPromptByID(env, id + offset)
-      console.log("Slot " + (id + offset) + " is taken: " + bool)
-      isTaken = bool
+      let bool = await getPromptByID(env, id + offset)
+      if(bool) {isTaken = true} else {isTaken = false}
+      console.log("Slot " + (id + offset) + " is taken: " + isTaken)
       console.log("id 2.3")
     }
     console.log("id 3")
