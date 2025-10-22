@@ -543,9 +543,11 @@ async function insertPrompt(env, content, genres, id){
   }
   console.log("id 4")
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
+  console.log("id 5")
   stmt = env.PROMPTS.prepare(query).bind(`${String(id)}`,`${content}`,`${genres}`);
-  
+  console.log("id 6")
   await stmt.run();
+  console.log("id 7")
   return true;
 }
 
