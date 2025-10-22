@@ -267,9 +267,10 @@ let idTakenResp = new JsonResponse({
 
         if(notEnoughPerms) {return notEnoughPerms;}
         console.log("test 1")
-        let idOption = interaction.data.options?.find(opt => opt.name === "id")
-        if(idOption) {
-          idOption = idOption.value
+        let idOptionCheck = interaction.data.options?.find(opt => opt.name === "id")
+        let idOption
+        if(idOptionCheck) {
+          idOption = idOptionCheck.value
           console.log(idOption)
           isTaken = await getPromptByID(env, idOption)
           console.log(isTaken)
