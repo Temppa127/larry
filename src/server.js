@@ -33,7 +33,23 @@ class JsonResponse extends Response {
   }
 }
 
-let invalidResp = new JsonResponse({
+
+
+const router = AutoRouter();
+
+// Hello route
+router.get('/', (request, env) => {
+  return new Response('🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭');
+});
+
+// Main Discord interaction route
+router.post('/', async (request, env) => {
+  const { isValid, interaction } = await verifyDiscordRequest(request, env);
+  if (!isValid || !interaction) {
+    return new Response('Bad request signature.', { status: 401 });
+  }
+
+  let invalidResp = new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content: "Invalid input",
@@ -56,22 +72,7 @@ let idTakenResp = new JsonResponse({
             flags: InteractionResponseFlags.EPHEMERAL
           }
         });
-
-
-
-const router = AutoRouter();
-
-// Hello route
-router.get('/', (request, env) => {
-  return new Response('🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭');
-});
-
-// Main Discord interaction route
-router.post('/', async (request, env) => {
-  const { isValid, interaction } = await verifyDiscordRequest(request, env);
-  if (!isValid || !interaction) {
-    return new Response('Bad request signature.', { status: 401 });
-  }
+  
 
   if (interaction.type === InteractionType.PING) {
     return new JsonResponse({
