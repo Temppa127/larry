@@ -271,7 +271,6 @@ let idTakenResp = new JsonResponse({
         if(idOption) {
           idOption = idOption.value
           isTaken = await getPromptByID(env, idOption)
-
           if (isTaken) {return isTakenResp}
         }
         console.log("test 2")
@@ -282,13 +281,14 @@ let idTakenResp = new JsonResponse({
         console.log("test 3")
         await insertPrompt(env, contentOption, genresOption, idOption);
         console.log("test 4")
+        
         return new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { content: "test success" },
-        });
-
-
-
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Successfully added prompt.",
+          flags: InteractionResponseFlags.EPHEMERAL
+        }
+      });
       }
 
       case CHANNEL_COMMAND.name.toLowerCase(): {
@@ -546,6 +546,7 @@ async function insertPrompt(env, content, genres, id){
   stmt = env.PROMPTS.prepare(query).bind(`${String(id)}`,`${content}`,`${genres}`);
   
   await stmt.run();
+  return true;
 }
 
 async function getPromptByID(env, ID) {
