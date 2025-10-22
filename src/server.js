@@ -526,30 +526,25 @@ async function insertPrompt(env, content, genres, id){
   if(!id) {
     console.log("id 1")
     id = Number(await env.LOWEST_AVAILABLE.get("general")) //TODO: server dependent
-    let offset = 1
-    let isTaken = await getPromptByID(env, id + offset)
-    console.log("id 2")
-    while(isTaken){
-      console.log("id 2.1")
-      offset += 1
-      console.log("id 2.2")
-      let bool = await getPromptByID(env, id + offset)
-      if(bool) {isTaken = true} else {isTaken = false}
-      console.log("Slot " + (id + offset) + " is taken: " + isTaken)
-      console.log("id 2.3")
-    }
-    console.log("id 3")
-    
-    await env.LOWEST_AVAILABLE.put("general", String(Number(id) + offset))
+    setLowestTakenToNextAvailable(env, id)
+  } else {
+    if(id == Number(await env.LOWEST_AVAILABLE.get("general"))) {setLowestTakenToNextAvailable(env, id)}
   }
-  console.log("id 4")
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
-  console.log("id 5")
   stmt = env.PROMPTS.prepare(query).bind(`${String(id)}`,`${content}`,`${genres}`);
-  console.log("id 6")
   await stmt.run();
-  console.log("id 7")
   return true;
+}
+
+async function setLowestTakenToNextAvailable(env, ID) {
+  let offset = 1
+  let isTaken = await getPromptByID(env, ID + offset)
+  while(isTaken){
+    offset += 1
+    let bool = await getPromptByID(env, ID + offset)
+    if(bool) {isTaken = true} else {isTaken = false}
+  }
+  await env.LOWEST_AVAILABLE.put("general", String(Number(ID) + offset))
 }
 
 async function getPromptByID(env, ID) {
