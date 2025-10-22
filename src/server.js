@@ -532,7 +532,7 @@ async function insertPrompt(env, content, genres, id){
       console.log("id 2.1")
       offset += 1
       console.log("id 2.2")
-      bool = getPromptByID(env, id + offset)
+      let bool = getPromptByID(env, id + offset)
       console.log("Slot " + (id + offset) + " is taken: " + bool)
       isTaken = bool
       console.log("id 2.3")
