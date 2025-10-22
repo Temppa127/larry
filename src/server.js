@@ -269,7 +269,7 @@ let idTakenResp = new JsonResponse({
         console.log("test 1")
         let idOption = interaction.data.options?.find(opt => opt.name === "id")
         if(idOption) {
-          //idOption = idOption.value
+          idOption = idOption.value
           console.log(idOption)
           isTaken = await getPromptByID(env, idOption)
           console.log(isTaken)
