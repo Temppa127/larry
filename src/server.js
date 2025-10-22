@@ -521,24 +521,26 @@ async function insertPrompt(env, content, genres, id){
   let query;
   let stmt;
 
+  console.log("id 0")
   if(!id) {
+    console.log("id 1")
     id = Number(await env.LOWEST_AVAILABLE.get("general")) //TODO: server dependent
     let offset = 1
     let isTaken = getPromptByID(env, id + offset)
-
+    console.log("id 2")
     while(isTaken){
       offset += 1
       bool = getPromptByID(env, id + offset)
       console.log("Slot " + (id + offset) + " is taken: " + bool)
       isTaken = bool
     }
-
+    console.log("id 3")
     
     await env.LOWEST_AVAILABLE.put("general", String(Number(id) + offset))
   }
-
+  console.log("id 4")
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
-  stmt = env.PROMPTS.prepare(query).bind(`${id}`,`${content}`,`${genres}`);
+  stmt = env.PROMPTS.prepare(query).bind(`${String(id)}`,`${content}`,`${genres}`);
   
   await stmt.run();
 }
