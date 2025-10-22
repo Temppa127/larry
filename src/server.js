@@ -41,7 +41,7 @@ let invalidResp = new JsonResponse({
           }
         });
 
-let invalidResp = new JsonResponse({
+let invalidIdResp = new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content: "Invalid ID",
