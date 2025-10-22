@@ -528,7 +528,7 @@ async function insertPrompt(env, content, genres, id){
     id = Number(await env.LOWEST_AVAILABLE.get("general")) //TODO: server dependent
     setLowestTakenToNextAvailable(env, id)
   } else {
-    if(id == Number(await env.LOWEST_AVAILABLE.get("general"))) {setLowestTakenToNextAvailable(env, id)}
+    if(Number(id) === Number(await env.LOWEST_AVAILABLE.get("general"))) {setLowestTakenToNextAvailable(env, id)}
   }
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
   stmt = env.PROMPTS.prepare(query).bind(`${String(id)}`,`${content}`,`${genres}`);
