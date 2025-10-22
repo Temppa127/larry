@@ -529,10 +529,13 @@ async function insertPrompt(env, content, genres, id){
     let isTaken = getPromptByID(env, id + offset)
     console.log("id 2")
     while(isTaken){
+      console.log("id 2.1")
       offset += 1
+      console.log("id 2.2")
       bool = getPromptByID(env, id + offset)
       console.log("Slot " + (id + offset) + " is taken: " + bool)
       isTaken = bool
+      console.log("id 2.3")
     }
     console.log("id 3")
     
@@ -563,7 +566,6 @@ async function getPromptByID(env, ID) {
 }
 
 
-
 async function getRandomPrompt(env, genre) {
   let query;
   let stmt;
@@ -583,9 +585,6 @@ async function getRandomPrompt(env, genre) {
   }
   return null;
 }
-
-
-
 
 
 // Cloudflare Worker fetch handler
