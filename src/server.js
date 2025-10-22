@@ -15,21 +15,7 @@ const PERM_LEVELS = {
   "DEFAULT": 0
 }
 
-let invalidResp = new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: "Invalid input",
-            flags: InteractionResponseFlags.EPHEMERAL
-          }
-        });
 
-let idTakenResp = new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: "Requested ID is already taken",
-            flags: InteractionResponseFlags.EPHEMERAL
-          }
-        });
 
 
 
@@ -46,6 +32,32 @@ class JsonResponse extends Response {
     super(jsonBody, init);
   }
 }
+
+let invalidResp = new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Invalid input",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });
+
+let invalidResp = new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Invalid ID",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });
+
+let idTakenResp = new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Requested ID is already taken",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });
+
+
 
 const router = AutoRouter();
 
@@ -183,14 +195,6 @@ router.post('/', async (request, env) => {
         let notEnoughPerms = await checkPermissions(env, userId, "DELPROMPT");
 
         if(notEnoughPerms) {return notEnoughPerms;}
-
-        let invalidIdResp = new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: "Invalid ID",
-            flags: InteractionResponseFlags.EPHEMERAL
-          }
-        });
 
         const idOption = interaction.data.options?.find(opt => opt.name === "id").value;
         if(!idOption){return invalidIdResp}
