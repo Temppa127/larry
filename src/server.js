@@ -10,9 +10,26 @@ import { clearDelBuffer } from './utils.js';
 
 const PERM_LEVELS = {
   "ADMIN": 1000,
+  "DELPROMPT": 15,
   "MAKEPROMPT": 10,
   "DEFAULT": 0
 }
+
+let invalidResp = new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Invalid input",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });
+
+let idTakenResp = new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: "Requested ID is already taken",
+            flags: InteractionResponseFlags.EPHEMERAL
+          }
+        });
 
 
 
@@ -163,7 +180,7 @@ router.post('/', async (request, env) => {
         const userId = interaction.member.user.id;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
-        let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
+        let notEnoughPerms = await checkPermissions(env, userId, "DELPROMPT");
 
         if(notEnoughPerms) {return notEnoughPerms;}
 
@@ -239,21 +256,19 @@ router.post('/', async (request, env) => {
         const userId = interaction.member.user.id;
         if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
 
-        let invalidResp = new JsonResponse({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: "Invalid input",
-            flags: InteractionResponseFlags.EPHEMERAL
-          }
-        });
+        
 
         let notEnoughPerms = await checkPermissions(env, userId, "MAKEPROMPT");
 
         if(notEnoughPerms) {return notEnoughPerms;}
-
         console.log("test 1")
         let idOption = interaction.data.options?.find(opt => opt.name === "id")
-        if(idOption) {idOption = idOption.value}
+        if(idOption) {
+          idOption = idOption.value
+          isTaken = getPromptByID(env, idOption)
+
+          if (isTaken) {return isTakenResp}
+        }
         console.log("test 2")
         const contentOption = interaction.data.options?.find(opt => opt.name === "content").value
         if(!contentOption){return invalidResp}
@@ -503,7 +518,16 @@ async function insertPrompt(env, content, genres, id){
 
   if(!id) {
     id = await env.LOWEST_AVAILABLE.get("general") //TODO: server dependent
-    await env.LOWEST_AVAILABLE.put("general", String(Number(id) + 1))
+    let offset = 1
+    let isTaken = getPromptByID(env, id + offset)
+
+    while(isTaken){
+      offset += 1
+      isTaken = getPromptByID(env, id + offset)
+    }
+
+    
+    await env.LOWEST_AVAILABLE.put("general", String(Number(id) + offset))
   }
 
   query = "INSERT INTO generalPrompts (numberID, mainText, genres) VALUES (?, ?, ?)";
