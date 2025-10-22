@@ -271,9 +271,7 @@ let idTakenResp = new JsonResponse({
         let idOption
         if(idOptionCheck) {
           idOption = idOptionCheck.value
-          console.log(idOption)
-          isTaken = await getPromptByID(env, idOption)
-          console.log(isTaken)
+          let isTaken = await getPromptByID(env, idOption)
           if (isTaken) {return isTakenResp}
         }
         console.log("test 2")
