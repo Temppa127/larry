@@ -5,7 +5,7 @@ import {
   verifyKey,
   InteractionResponseFlags,
 } from 'discord-interactions';
-import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND} from './commands.js';
+import {INVITE_COMMAND, PROMPT_COMMAND, CHANNEL_COMMAND, TEST_COMMAND, PROMPT_ADD_COMMAND, PROMPT_DELETE_COMMAND, BANNED_ROLE_COMMAND} from './commands.js';
 import { clearDelBuffer } from './utils.js';
 
 const PERM_LEVELS = {
@@ -305,6 +305,26 @@ let idTakenResp = new JsonResponse({
 
       }
 
+      case BANNED_ROLE_COMMAND.name.toLowerCase(): {
+        const userId = interaction.member.user.id;
+        if (!userId) {return new JsonResponse({ error: 'Invalid User' }, { status: 400 });}
+
+        let notEnoughPerms = await checkPermissions(env, userId, "ADMIN");
+        if(notEnoughPerms) {return notEnoughPerms;}
+
+        const guildId = interaction.guild_id;
+        const roleOption = interaction.data.options?.find(opt => opt.name === 'role');
+        const roleId = roleOption?.value;
+        if(!roleId) {return new JsonResponse({ error: 'Invalid role' }, { status: 400 });}
+
+        await env.BANNED_ROLES.put(guildId, String(roleId));
+
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: `Role set: users who gain this role will be banned. Role ID: ${roleId}` , flags: InteractionResponseFlags.EPHEMERAL }
+        });
+      }
+
       default:
         return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
     }
@@ -585,11 +605,80 @@ async function getRandomPrompt(env, genre) {
   return null;
 }
 
+// Scan configured guilds for the banned role and ban members who have it.
+async function runBannedRoleEnforcer(env) {
+  const list = await env.BANNED_ROLES.list();
+  const botToken = env.DISCORD_TOKEN;
+
+  for (const entry of list.keys) {
+    const guildId = entry.name;
+    const roleId = await env.BANNED_ROLES.get(guildId);
+    if (!roleId) continue;
+
+    let after = '0';
+    while (true) {
+      const url = `https://discord.com/api/v10/guilds/${guildId}/members?limit=1000${after && after !== '0' ? `&after=${after}` : ''}`;
+      let res;
+      try {
+        res = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bot ${botToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      } catch (e) {
+        break;
+      }
+
+      if (!res || res.status !== 200) break;
+
+      const members = await res.json();
+      if (!Array.isArray(members) || members.length === 0) break;
+
+      for (const member of members) {
+        try {
+          if (member.roles && member.roles.includes(roleId)) {
+            await banMemberInGuild(env, guildId, member.user.id);
+          }
+        } catch (e) {
+          // continue on error for individual members
+          continue;
+        }
+      }
+
+      after = members[members.length - 1].user.id;
+      if (!after) break;
+    }
+  }
+}
+
+async function banMemberInGuild(env, guildId, userId) {
+  const botToken = env.DISCORD_TOKEN;
+  const url = `https://discord.com/api/v10/guilds/${guildId}/bans/${userId}`;
+  try {
+    await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bot ${botToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        delete_message_days: 0,
+        reason: 'Auto-ban: monitored role assignment'
+      })
+    });
+  } catch (e) {
+    // swallow to avoid breaking the enforcer loop
+  }
+}
+
 
 // Cloudflare Worker fetch handler
 export default {
   async scheduled(controller, env, ctx) {
   await sendPromptToAllChannels(env);
+  await runBannedRoleEnforcer(env);
 },
   fetch: router.fetch,
 };
