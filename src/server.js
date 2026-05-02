@@ -543,7 +543,7 @@ async function setLowestTakenToNextAvailable(env, ID) {
     offset += 1
     let bool = await getPromptByID(env, ID + offset)
     if(bool) {isTaken = true} else {isTaken = false}
-  }
+  } // BOOKMARK: doesn't set this correctly
   await env.LOWEST_AVAILABLE.put("general", String(Number(ID) + offset))
 }
 
