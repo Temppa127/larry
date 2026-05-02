@@ -75,6 +75,20 @@ export const CHANNEL_COMMAND = {
   description: 'Set weekly prompt channel',
 };
 
+export const BANNED_ROLE_COMMAND = {
+  name: 'setbanrole',
+  description: 'Set a role that will cause automatic bans when a user gains it (owner only)',
+  type: 1,
+  options: [
+    {
+      name: 'role',
+      description: 'Role to monitor for automatic bans',
+      type: 8,
+      required: true,
+    },
+  ],
+};
+
 export const TEST_COMMAND = {
     "name": "permissions",
     "description": "Get or edit permissions for a user or a role",

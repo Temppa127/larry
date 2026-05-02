@@ -25,6 +25,10 @@ id = "61764b40fc854a74b8e9f8fbeab99101"
 binding = "LOWEST_AVAILABLE"
 id = "b1e5b9626b094ed3a0552ae920e3e602"
 
+[[kv_namespaces]]
+binding = "BANNED_ROLES"
+id = "d6d7964aeb2e47428c8828909243fc43"
+
 [[d1_databases]]
 binding = "PROMPTS"
 database_name = "prompts"
